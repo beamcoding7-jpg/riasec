@@ -1,0 +1,95 @@
+-- Phase 2 · Seed mapping (หัวใจ recommendation) — dimension → สาย/อาชีพ/สาขา + weight + reason
+-- weight: มิติหลักของ entity = 3, มิติรอง = 2, มิติที่สาม = 1
+-- matching (Phase 5): คะแนน entity = Σ (position_weight ของ top-3 ผู้ใช้ × map.weight) เฉพาะมิติที่ตรง
+-- reason: อธิบาย "ทำไมมิตินี้ถึงเหมาะ" (CLAUDE.md §7.6) — ต้องมีเสมอ
+-- idempotent: upsert (dimension, entity_id)
+
+-- ══════════ track_map (สายการเรียน) — explicit ══════════
+insert into riasec_track_map (dimension, track_id, weight, reason) values
+('I', (select id from study_tracks where slug='sci-math'), 3, 'เน้นวิทยาศาสตร์และการทดลองที่ต้องคิดวิเคราะห์ ตรงกับความชอบด้านนักคิดวิเคราะห์ (I)'),
+('R', (select id from study_tracks where slug='sci-math'), 2, 'ได้ลงมือทดลองและใช้เครื่องมือวิทยาศาสตร์จริง เหมาะกับสายนักปฏิบัติ (R)'),
+('C', (select id from study_tracks where slug='sci-math'), 1, 'มีการคำนวณและจัดการข้อมูลอย่างเป็นระบบ เข้ากับความถนัดด้านจัดระบบ (C)'),
+('C', (select id from study_tracks where slug='arts-math'), 3, 'เน้นคณิตศาสตร์ ตัวเลข และความเป็นระบบ ตรงกับความถนัดด้านจัดระบบ (C)'),
+('E', (select id from study_tracks where slug='arts-math'), 2, 'ต่อยอดสายธุรกิจและบริหารที่ต้องวางแผนและตัดสินใจ เหมาะกับนักบริหาร (E)'),
+('I', (select id from study_tracks where slug='arts-math'), 1, 'ยังใช้การวิเคราะห์เชิงตรรกะกับตัวเลข เข้ากับนักคิดวิเคราะห์ (I)'),
+('A', (select id from study_tracks where slug='arts-language'), 3, 'เน้นภาษาและการสื่อสารเชิงสร้างสรรค์ ตรงกับความชอบด้านนักสร้างสรรค์ (A)'),
+('S', (select id from study_tracks where slug='arts-language'), 2, 'ภาษาเปิดทางสู่การทำงานและสื่อสารกับผู้คน เหมาะกับนักสังคม (S)'),
+('E', (select id from study_tracks where slug='arts-language'), 1, 'ทักษะภาษาช่วยงานเจรจาและธุรกิจระหว่างประเทศ เข้ากับนักบริหาร (E)'),
+('S', (select id from study_tracks where slug='arts-social'), 3, 'เน้นสังคม มนุษย์ และการอยู่ร่วมกัน ตรงกับความชอบด้านนักสังคม (S)'),
+('E', (select id from study_tracks where slug='arts-social'), 2, 'ต่อยอดสายกฎหมายและรัฐศาสตร์ที่ต้องใช้ภาวะผู้นำและการโน้มน้าว เหมาะกับนักบริหาร (E)'),
+('C', (select id from study_tracks where slug='arts-social'), 1, 'มีการจัดระบบข้อมูลและกฎเกณฑ์ เข้ากับความถนัดด้านจัดระบบ (C)'),
+('A', (select id from study_tracks where slug='arts-general'), 3, 'ยืดหยุ่นให้เลือกวิชาศิลปะ ดนตรี ออกแบบ ตรงกับความชอบด้านนักสร้างสรรค์ (A)'),
+('S', (select id from study_tracks where slug='arts-general'), 2, 'เปิดกว้างให้ทำกิจกรรมหลากหลายและทำงานกับผู้คน เข้ากับนักสังคม (S)'),
+('R', (select id from study_tracks where slug='vocational'), 3, 'เรียนเชิงปฏิบัติ ลงมือทำจริงในสายช่างและเทคนิค ตรงกับความชอบด้านนักปฏิบัติ (R)'),
+('C', (select id from study_tracks where slug='vocational'), 2, 'มีสายบัญชีและธุรการที่ทำงานกับข้อมูลอย่างเป็นระบบ เข้ากับนักจัดระบบ (C)'),
+('E', (select id from study_tracks where slug='vocational'), 1, 'มีสายการตลาดและธุรกิจที่ฝึกการค้าและบริการ เข้ากับนักบริหาร (E)')
+on conflict (dimension, track_id) do update set weight = excluded.weight, reason = excluded.reason;
+
+-- ══════════ career_map (อาชีพ) — อิง careers.holland_code อัตโนมัติ ══════════
+insert into riasec_career_map (dimension, career_id, weight, reason)
+select
+  d.dim::riasec_dimension,
+  c.id,
+  case when left(c.holland_code, 1) = d.dim then 3
+       when substr(c.holland_code, 2, 1) = d.dim then 2
+       else 1 end,
+  case d.dim
+    when 'R' then 'อาชีพนี้ได้ลงมือทำจริง ใช้ทักษะเชิงช่าง เครื่องมือ หรือทำงานภาคสนาม ตรงกับความชอบด้านนักปฏิบัติ (R)'
+    when 'I' then 'อาชีพนี้ต้องคิดวิเคราะห์ ค้นคว้า และแก้ปัญหาเชิงเหตุผล ตรงกับความชอบด้านนักคิดวิเคราะห์ (I)'
+    when 'A' then 'อาชีพนี้เปิดให้ใช้ความคิดสร้างสรรค์และการแสดงออก ตรงกับความชอบด้านนักสร้างสรรค์ (A)'
+    when 'S' then 'อาชีพนี้ได้ทำงานกับผู้คน ช่วยเหลือ ดูแล หรือสอน ตรงกับความชอบด้านนักสังคม (S)'
+    when 'E' then 'อาชีพนี้ได้ใช้ภาวะผู้นำ การโน้มน้าว หรือริเริ่มธุรกิจ ตรงกับความชอบด้านนักบริหาร (E)'
+    when 'C' then 'อาชีพนี้ทำงานกับข้อมูล ตัวเลข ระบบ และความเป็นระเบียบ ตรงกับความชอบด้านนักจัดระบบ (C)'
+  end
+from careers c
+cross join (values ('R'), ('I'), ('A'), ('S'), ('E'), ('C')) as d(dim)
+where c.holland_code like '%' || d.dim || '%'
+on conflict (dimension, career_id) do update set weight = excluded.weight, reason = excluded.reason;
+
+-- ══════════ major_map (สาขา) — อิง mapping (ชื่อสาขา → มิติ, weight) ══════════
+insert into riasec_major_map (dimension, major_id, weight, reason)
+select
+  mp.dim::riasec_dimension,
+  m.id,
+  mp.weight,
+  case mp.dim
+    when 'R' then 'สาขานี้ได้ลงมือปฏิบัติจริง ใช้เครื่องมือหรือทำงานภาคสนาม ตรงกับความชอบด้านนักปฏิบัติ (R)'
+    when 'I' then 'สาขานี้เน้นการวิเคราะห์ ค้นคว้า ทดลอง และวิทยาศาสตร์ ตรงกับความชอบด้านนักคิดวิเคราะห์ (I)'
+    when 'A' then 'สาขานี้เปิดให้ใช้ความคิดสร้างสรรค์และการแสดงออก ตรงกับความชอบด้านนักสร้างสรรค์ (A)'
+    when 'S' then 'สาขานี้ได้ทำงานกับผู้คน ช่วยเหลือ ดูแล หรือสอน ตรงกับความชอบด้านนักสังคม (S)'
+    when 'E' then 'สาขานี้ฝึกภาวะผู้นำ การโน้มน้าว และการบริหาร ตรงกับความชอบด้านนักบริหาร (E)'
+    when 'C' then 'สาขานี้ทำงานกับข้อมูล ตัวเลข และระบบที่เป็นระเบียบ ตรงกับความชอบด้านนักจัดระบบ (C)'
+  end
+from majors m
+join (values
+  ('วิศวกรรมโยธา','R',3),
+  ('วิศวกรรมเครื่องกล','R',3),
+  ('วิศวกรรมไฟฟ้า','R',3),
+  ('เกษตรศาสตร์','R',3), ('เกษตรศาสตร์','I',2),
+  ('ประมง','R',3), ('ประมง','I',2),
+  ('วิศวกรรมคอมพิวเตอร์','I',3), ('วิศวกรรมคอมพิวเตอร์','R',2),
+  ('วิทยาการคอมพิวเตอร์','I',3), ('วิทยาการคอมพิวเตอร์','C',2),
+  ('เทคโนโลยีสารสนเทศ','C',3), ('เทคโนโลยีสารสนเทศ','I',2),
+  ('แพทยศาสตร์','I',3), ('แพทยศาสตร์','S',2),
+  ('เภสัชศาสตร์','I',3),
+  ('วิทยาศาสตร์','I',3),
+  ('พยาบาลศาสตร์','S',3), ('พยาบาลศาสตร์','I',2),
+  ('อักษรศาสตร์','A',3), ('อักษรศาสตร์','S',2),
+  ('ภาษาอังกฤษ','A',3), ('ภาษาอังกฤษ','S',2),
+  ('ทัศนศิลป์','A',3),
+  ('สถาปัตยกรรม','A',3), ('สถาปัตยกรรม','I',2),
+  ('ออกแบบนิเทศศิลป์','A',3),
+  ('ดุริยางคศาสตร์','A',3),
+  ('ดนตรีและการแสดง','A',3),
+  ('ครุศาสตร์','S',3),
+  ('ศึกษาศาสตร์','S',3),
+  ('การศึกษา','S',3),
+  ('ครุศาสตร์อุตสาหกรรม','S',3), ('ครุศาสตร์อุตสาหกรรม','R',2),
+  ('จิตวิทยา','S',3), ('จิตวิทยา','I',2),
+  ('นิติศาสตร์','E',3), ('นิติศาสตร์','I',2),
+  ('รัฐศาสตร์','E',3), ('รัฐศาสตร์','S',2),
+  ('การตลาด','E',3), ('การตลาด','C',2),
+  ('บริหารธุรกิจ','E',3), ('บริหารธุรกิจ','C',2),
+  ('การบัญชี','C',3), ('การบัญชี','E',2)
+) as mp(name, dim, weight) on mp.name = m.name
+on conflict (dimension, major_id) do update set weight = excluded.weight, reason = excluded.reason;

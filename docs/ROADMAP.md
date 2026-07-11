@@ -56,15 +56,15 @@
 **🎯 Objective**: มี schema ครบ + RLS + seed ข้อมูลพอให้ทั้ง flow ทำงานได้จริง (คำถาม + featured content)
 
 **📋 Tasks**
-- [ ] 2.1 **ออกแบบ schema** จาก data model (`CLAUDE.md §4`): ทุกตาราง + `enum` dimension (R/I/A/S/E/C) + FK + index ที่จำเป็น
-- [ ] 2.2 **Migrations**: สร้างทุกตารางเป็นไฟล์ใน `supabase/migrations/`
-- [ ] 2.3 **RLS policies**: content สาธารณะ `select` ได้; `test_sessions` ใช้ `auth.uid() = user_id`; ใช้ **restrictive policy** เช็ค `is_anonymous` ตามที่ต้องจำกัด (ref: advisor lint 0012)
-- [ ] 2.4 **เปิด Anonymous Sign-in** + ตั้ง **Cloudflare Turnstile** ใน Supabase Auth
-- [ ] 2.5 **Seed คำถาม**: O*NET Interest Profiler **60 ข้อ (10/ด้าน)** → แปลไทย + ปรับสำนวนให้ ม.3–6 → `riasec_questions` (ใส่ `source`) *(ดู `CLAUDE.md §7.7`)*
-- [ ] 2.6 **Seed featured content**: `study_tracks`, `careers` (ชุดตั้งต้น), คณะ/สาขาของ **15 มหาลัยหลัก** (`is_featured`), และตาราง `riasec_track_map` / `riasec_career_map` / `riasec_major_map` พร้อม `reason` "ทำไมถึงเหมาะ"
-- [ ] 2.7 **Cron cleanup**: `pg_cron` (หรือ Vercel Cron) ลบ anonymous users เก่า > 30 วัน
-- [ ] 2.8 **Generate types**: `generate_typescript_types` → `types/`
-- [ ] 2.9 **Advisors**: รัน `get_advisors` (security + performance) แก้ที่เป็น ERROR
+- [x] 2.1 **ออกแบบ schema** จาก data model (`CLAUDE.md §4`): ทุกตาราง + `enum` dimension (R/I/A/S/E/C) + FK + index ที่จำเป็น
+- [x] 2.2 **Migrations**: สร้างทุกตารางเป็นไฟล์ใน `supabase/migrations/` (`20260712100000_enums_and_tables`, `..._rls_policies`)
+- [x] 2.3 **RLS policies**: content สาธารณะ `select` ได้; `test_sessions` ใช้ `auth.uid() = user_id` (CRUD ครบ) — *restrictive `is_anonymous` policy เลื่อนไป Phase 6 (ยังไม่มี action เฉพาะ permanent)*
+- [ ] 2.4 **เปิด Anonymous Sign-in** + ตั้ง **Cloudflare Turnstile** — *เลื่อนไป Phase 4 (ตอนต่อ sign-in flow จริง); เปิด provider = manual ผู้ใช้กด 1 ครั้ง*
+- [x] 2.5 **Seed คำถาม**: O*NET Interest Profiler **60 ข้อ (10/ด้าน)** → แปลไทย + ปรับสำนวนให้ ม.3–6 → `riasec_questions` (เก็บ `text_en` + `source`)
+- [x] 2.6 **Seed featured content**: 6 `study_tracks`, 36 `careers`, 15 มหาลัย + 55 คณะ + 56 สาขา + `*_map` ครบ 3 ตาราง พร้อม `reason` — ครอบทุก Holland code (120 perm ไม่ว่าง)
+- [ ] 2.7 **Cron cleanup**: `pg_cron` ลบ anonymous > 30 วัน — *เลื่อนไป Phase 8 (hardening); `pg_cron`/`pg_net` ยังไม่ติดตั้ง*
+- [x] 2.8 **Generate types**: `generate_typescript_types` → `types/database.ts` + `types/index.ts` (helper) + ผูก `<Database>` เข้า Supabase clients
+- [x] 2.9 **Advisors**: `get_advisors` security = สะอาด; performance = มีแค่ INFO `unused_index` (ไม่มี ERROR)
 
 **📦 Deliverables**: schema + RLS + seed (คำถาม + featured) + generated types
 
@@ -196,8 +196,8 @@
 
 | Phase | ชื่อ | สถานะ | Definition of Done (ย่อ) |
 |---|---|---|---|
-| 1 | Setup & Foundation | ☐ ยังไม่เริ่ม | ทุก command เขียว + preview deploy ผ่าน |
-| 2 | Data Layer & Seed ตั้งต้น | ☐ ยังไม่เริ่ม | recommendation query คืนผลจริง + RLS ผ่าน |
+| 1 | Setup & Foundation | ✅ เสร็จ | ทุก command เขียว + production deploy ผ่าน |
+| 2 | Data Layer & Seed ตั้งต้น | ✅ เสร็จ | recommendation query คืนผลจริง (120 perm ไม่ว่าง) + RLS ผ่าน |
 | 3 | Scoring Engine (pure) | ☐ ยังไม่เริ่ม | test เขียว + Holland code ถูกต้อง |
 | 4 | Test-taking Flow (UI) | ☐ ยังไม่เริ่ม | ทำเทส mobile → บันทึก session → ไปหน้าผล |
 | 5 | Results & Recommendation | ☐ ยังไม่เริ่ม | ผลครบ 4 อย่างตาม §1 จาก DB |
