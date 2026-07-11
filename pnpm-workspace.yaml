@@ -1,0 +1,5 @@
+# อนุญาตให้รัน build scripts เฉพาะ deps ที่จำเป็นและเชื่อถือได้
+# sharp = image optimization ของ next/image ; unrs-resolver = import resolver ของ eslint
+allowBuilds:
+  sharp: true
+  unrs-resolver: true

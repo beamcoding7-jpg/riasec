@@ -1,0 +1,10 @@
+# ไฟล์/โฟลเดอร์ที่ไม่ต้องให้ prettier จัดรูปแบบ
+node_modules
+.next
+out
+build
+coverage
+pnpm-lock.yaml
+next-env.d.ts
+# เอกสารไทยที่จัดตาราง/รูปแบบด้วยมือแล้ว (กัน prettier reflow ตาราง markdown)
+*.md
