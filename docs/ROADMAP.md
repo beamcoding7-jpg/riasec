@@ -59,7 +59,7 @@
 - [x] 2.1 **ออกแบบ schema** จาก data model (`CLAUDE.md §4`): ทุกตาราง + `enum` dimension (R/I/A/S/E/C) + FK + index ที่จำเป็น
 - [x] 2.2 **Migrations**: สร้างทุกตารางเป็นไฟล์ใน `supabase/migrations/` (`20260712100000_enums_and_tables`, `..._rls_policies`)
 - [x] 2.3 **RLS policies**: content สาธารณะ `select` ได้; `test_sessions` ใช้ `auth.uid() = user_id` (CRUD ครบ) — *restrictive `is_anonymous` policy เลื่อนไป Phase 6 (ยังไม่มี action เฉพาะ permanent)*
-- [ ] 2.4 **เปิด Anonymous Sign-in** + ตั้ง **Cloudflare Turnstile** — *เลื่อนไป Phase 4 (ตอนต่อ sign-in flow จริง); เปิด provider = manual ผู้ใช้กด 1 ครั้ง*
+- [x] 2.4 **เปิด Anonymous Sign-in** (ผู้ใช้เปิด provider ใน dashboard แล้ว — Phase 4 เรียกตอนกดส่ง) — *Turnstile ยังเลื่อนไป Phase 8 (hardening)*
 - [x] 2.5 **Seed คำถาม**: O*NET Interest Profiler **60 ข้อ (10/ด้าน)** → แปลไทย + ปรับสำนวนให้ ม.3–6 → `riasec_questions` (เก็บ `text_en` + `source`)
 - [x] 2.6 **Seed featured content**: 6 `study_tracks`, 36 `careers`, 15 มหาลัย + 55 คณะ + 56 สาขา + `*_map` ครบ 3 ตาราง พร้อม `reason` — ครอบทุก Holland code (120 perm ไม่ว่าง)
 - [ ] 2.7 **Cron cleanup**: `pg_cron` ลบ anonymous > 30 วัน — *เลื่อนไป Phase 8 (hardening); `pg_cron`/`pg_net` ยังไม่ติดตั้ง*
@@ -99,18 +99,19 @@
 **🎯 Objective**: ผู้ใช้ทำแบบทดสอบบนมือถือได้ลื่น ไม่น่าเบื่อ และบันทึกผลได้
 
 **📋 Tasks**
-- [ ] 4.1 เรียก **Anonymous Sign-in** ตอนเริ่มทำเทส (+ Turnstile) — ได้ `auth.uid()`
-- [ ] 4.2 หน้าเลือก **ช่วงชั้น** (ม.3 / ม.4–ม.6) → เก็บ `grade_level`
-- [ ] 4.3 **UI ทำเทส**: แสดงทีละคำถาม/กลุ่ม + progress bar + Likert (แตะง่าย/คีย์บอร์ดได้) + resume ค้างไว้ได้
-- [ ] 4.4 **บันทึกผล**: Zod validate คำตอบ → Server Action เรียก scoring engine (Phase 3) → เขียน `test_sessions` (answers/scores/holland_code)
-- [ ] 4.5 จัดการ **loading / error / empty** states
+- [x] 4.1 เรียก **Anonymous Sign-in** ตอนกดส่งคำตอบ (ใน Server Action ก่อน insert) — ได้ `auth.uid()` *(Turnstile เลื่อน Phase 8)*
+- [x] 4.2 หน้าเลือก **ช่วงชั้น** (ม.3 / ม.4–ม.6) → เก็บ `grade_level` (`GradeIntro`)
+- [x] 4.3 **UI ทำเทส**: ทีละคำถาม + progress bar + Likert (แตะง่าย/คีย์บอร์ด) + auto-advance + ย้อนกลับ *(resume ค้างไว้ เลื่อน Phase 6)*
+- [x] 4.4 **บันทึกผล**: Zod (`submitTestSchema`) → Server Action คำนวณฝั่ง server ด้วย scoring engine (Phase 3) → เขียน `test_sessions` (answers/scores/holland_code)
+- [x] 4.5 จัดการ **loading / error / empty** states + หน้า `/results/[sessionId]` เวอร์ชัน minimal (Holland code + คะแนน 6 ด้าน; Phase 5 เพิ่ม radar/คำแนะนำ)
 
-**📦 Deliverables**: flow `app/(test)/` ครบ → สร้าง `test_sessions` จริง
+**📦 Deliverables**: flow `app/(test)/test/` + `app/results/[sessionId]/` + `components/test/*` → สร้าง `test_sessions` จริง
 
 **✅ Verification / DoD**
-- ทำเทสจริงบน **mobile viewport** จนจบ
-- session ถูกบันทึกใน DB ผูกกับ `auth.uid()`
-- ทำเทสจบ → redirect ไป `/results/[sessionId]`
+- [x] ทำเทสจริงบน **mobile viewport** จนจบ (headless e2e: ตอบครบ 60 → Holland `RIA`, คะแนน 100 ทุกด้าน ถูกต้อง)
+- [x] session ถูกบันทึกใน DB ผูกกับ `auth.uid()` (ยืนยัน `is_anonymous=true` แล้วลบ cleanup)
+- [x] ทำเทสจบ → redirect ไป `/results/[sessionId]`; RLS กันเห็นผลคนอื่น (`maybeSingle` → "ไม่พบผล")
+- [x] `pnpm test` (29) / `typecheck` / `lint` / `format:check` / `build` เขียวครบ
 
 ---
 
@@ -199,7 +200,7 @@
 | 1 | Setup & Foundation | ✅ เสร็จ | ทุก command เขียว + production deploy ผ่าน |
 | 2 | Data Layer & Seed ตั้งต้น | ✅ เสร็จ | recommendation query คืนผลจริง (120 perm ไม่ว่าง) + RLS ผ่าน |
 | 3 | Scoring Engine (pure) | ✅ เสร็จ | 23 tests เขียว + Holland code ถูกต้อง (deterministic) |
-| 4 | Test-taking Flow (UI) | ☐ ยังไม่เริ่ม | ทำเทส mobile → บันทึก session → ไปหน้าผล |
+| 4 | Test-taking Flow (UI) | ✅ เสร็จ | ทำเทส mobile ครบ → บันทึก session (anon) → ไปหน้าผลเบื้องต้น (e2e ผ่าน) |
 | 5 | Results & Recommendation | ☐ ยังไม่เริ่ม | ผลครบ 4 อย่างตาม §1 จาก DB |
 | 6 | Auth & History | ☐ ยังไม่เริ่ม | upgrade anonymous ไม่เสียผล + history + ลบได้ |
 | 7 | ขยายคลังข้อมูล | ☐ ยังไม่เริ่ม | ไม่มี Holland code ไหนคำแนะนำว่างเปล่า |
