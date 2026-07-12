@@ -80,11 +80,11 @@
 **🎯 Objective**: `lib/riasec/` คำนวณคะแนน 6 ด้าน + Holland code ถูกต้อง **deterministic** และมี unit test ครบ
 
 **📋 Tasks**
-- [ ] 3.1 **Types**: `RiasecDimension`, `Answer`, `RiasecScores`, `HollandCode`
-- [ ] 3.2 `score-riasec.ts`: รวมคะแนนต่อด้าน + normalize เป็นสัดส่วน (กันจำนวนคำถามต่อด้านไม่เท่ากัน)
-- [ ] 3.3 `holland-code.ts`: จัดอันดับ → top 3, จัดการ **tie แบบ deterministic** (input เดิม → ผลเดิมเสมอ)
-- [ ] 3.4 **Edge cases**: ตอบไม่ครบ, ทุกด้านเท่ากัน, คะแนนเสมอกันหลายด้าน
-- [ ] 3.5 **Vitest**: unit tests ครอบทุก edge case ข้างต้น
+- [x] 3.1 **Types**: `QuestionMeta`, `AnswerMap`, `RiasecScores`, `RiasecResult` + Zod `answerMapSchema` (shared client/server)
+- [x] 3.2 `score-riasec.ts`: รวมคะแนนต่อด้าน + normalize **min-max 0–100** (นับตามข้อที่ตอบจริง → กันจำนวนคำถามต่อด้านไม่เท่ากัน)
+- [x] 3.3 `holland-code.ts`: จัดอันดับ → top 3, **tie-break ด้วย canonical order R-I-A-S-E-C** (deterministic)
+- [x] 3.4 **Edge cases**: ตอบไม่ครบ, ไม่ตอบเลย, ทุกด้านเท่ากัน, คะแนนเสมอ, จำนวนข้อไม่เท่ากัน
+- [x] 3.5 **Vitest**: 23 tests เขียว (score/holland/compute/schema) ครอบทุก edge case
 
 **📦 Deliverables**: scoring module (pure, ไม่ผูก DB/UI/network) + test suite
 
@@ -198,7 +198,7 @@
 |---|---|---|---|
 | 1 | Setup & Foundation | ✅ เสร็จ | ทุก command เขียว + production deploy ผ่าน |
 | 2 | Data Layer & Seed ตั้งต้น | ✅ เสร็จ | recommendation query คืนผลจริง (120 perm ไม่ว่าง) + RLS ผ่าน |
-| 3 | Scoring Engine (pure) | ☐ ยังไม่เริ่ม | test เขียว + Holland code ถูกต้อง |
+| 3 | Scoring Engine (pure) | ✅ เสร็จ | 23 tests เขียว + Holland code ถูกต้อง (deterministic) |
 | 4 | Test-taking Flow (UI) | ☐ ยังไม่เริ่ม | ทำเทส mobile → บันทึก session → ไปหน้าผล |
 | 5 | Results & Recommendation | ☐ ยังไม่เริ่ม | ผลครบ 4 อย่างตาม §1 จาก DB |
 | 6 | Auth & History | ☐ ยังไม่เริ่ม | upgrade anonymous ไม่เสียผล + history + ลบได้ |
