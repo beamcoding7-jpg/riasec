@@ -120,11 +120,11 @@
 **🎯 Objective**: หน้าแสดงผลสวย เข้าใจง่าย พร้อมคำแนะนำ 3 ชั้น (สาย/อาชีพ/สาขา) ที่มีเหตุผลกำกับ
 
 **📋 Tasks**
-- [ ] 5.1 **SVG radar** 6 ด้าน + ตัวเลข/ตารางคะแนนกำกับ (a11y) + ใช้ **6 สี RIASEC** คงที่
-- [ ] 5.2 สรุป **Holland code** + คำอธิบายบุคลิกภาพ (RSC ดึงจาก DB)
-- [ ] 5.3 **การ์ดคำแนะนำ**: สายเรียน (ม.3) / อาชีพ / สาขา — ดึงจาก `*_map` + แสดง `reason` **"ทำไมถึงเหมาะ"**
-- [ ] 5.4 **หน้า detail**: อาชีพ (ทำอะไร/เกี่ยวกับอะไร) · สาขา (เรียนอะไร/ต่อยอดอาชีพ) — กดจากการ์ดเข้าไปดู
-- [ ] 5.5 **แชร์ผล**: public link ที่เดายาก (`/results/[uuid]`) + `Metadata`/OG image
+- [x] 5.1 **SVG radar** 6 ด้าน (`RiasecRadar`) + แถบคะแนน/ตัวเลขกำกับ + `aria-label` (a11y) + ใช้ **6 สี RIASEC** คงที่ (`dim-colors`)
+- [x] 5.2 สรุป **Holland code** + **บุคลิกภาพ top-3** (`DimensionSummary`) — ชื่อไทย/คำอธิบาย 6 ด้านอยู่ใน `lib/strings.ts` (theory Holland/O*NET §7.6)
+- [x] 5.3 **การ์ดคำแนะนำ**: สายเรียน (ม.3, สาย 6) / อาชีพ (10) / สาขา (ม.4–6, 10) — matching `matchEntities` (pure, tested) จาก `*_map` + แสดง `reason` **"ทำไมถึงเหมาะกับคุณ"**
+- [~] 5.4 รายละเอียด **แสดง inline ในการ์ด `<details>`** (อาชีพทำอะไร · เรียนอะไร · ต่อยอดอาชีพ) — *หน้า detail แยก route เลื่อนไป Phase 7*
+- [~] 5.5 ลิงก์ผล `/results/[uuid]` (เดายาก) มีแล้ว — *OG image / ปุ่มแชร์ เลื่อนไป Phase 8 (SEO/hardening)*
 
 **📦 Deliverables**: `app/results/[sessionId]/` + หน้า detail อาชีพ/สาขา
 
@@ -201,7 +201,7 @@
 | 2 | Data Layer & Seed ตั้งต้น | ✅ เสร็จ | recommendation query คืนผลจริง (120 perm ไม่ว่าง) + RLS ผ่าน |
 | 3 | Scoring Engine (pure) | ✅ เสร็จ | 23 tests เขียว + Holland code ถูกต้อง (deterministic) |
 | 4 | Test-taking Flow (UI) | ✅ เสร็จ | ทำเทส mobile ครบ → บันทึก session (anon) → ไปหน้าผลเบื้องต้น (e2e ผ่าน) |
-| 5 | Results & Recommendation | ☐ ยังไม่เริ่ม | ผลครบ 4 อย่างตาม §1 จาก DB |
+| 5 | Results & Recommendation | ✅ เสร็จ | radar + บุคลิก + คำแนะนำสาย/อาชีพ/สาขา + เหตุผลจาก DB (e2e m3+m4_6 ผ่าน) |
 | 6 | Auth & History | ☐ ยังไม่เริ่ม | upgrade anonymous ไม่เสียผล + history + ลบได้ |
 | 7 | ขยายคลังข้อมูล | ☐ ยังไม่เริ่ม | ไม่มี Holland code ไหนคำแนะนำว่างเปล่า |
 | 8 | Polish & Hardening | ☐ ยังไม่เริ่ม | Lighthouse ผ่าน + e2e เขียว + prod ผ่าน |

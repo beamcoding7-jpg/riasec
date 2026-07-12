@@ -25,5 +25,6 @@ export function computeRiasecResult(questions: QuestionMeta[], answers: AnswerMa
 export * from "./constants";
 export * from "./types";
 export * from "./schema";
+export * from "./match";
 export { scoreRiasec, type ScoreBreakdown } from "./score-riasec";
 export { rankDimensions, toHollandCode } from "./holland-code";
