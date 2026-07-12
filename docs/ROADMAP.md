@@ -139,17 +139,18 @@
 **🎯 Objective**: ผู้ใช้ล็อกอินเพื่อเก็บประวัติได้ และ upgrade จาก anonymous โดยไม่เสียผลเดิม
 
 **📋 Tasks**
-- [ ] 6.1 **ล็อกอิน** Google OAuth + email ผ่าน `linkIdentity()` (upgrade anonymous → permanent, uid เดิมคงอยู่)
-- [ ] 6.2 จัดการ **identity conflict** (กรณี email ซ้ำกับบัญชีเดิม) ตามแนวทาง Supabase
-- [ ] 6.3 หน้า **`/history`**: แสดงผลย้อนหลังของผู้ใช้ (RLS เห็นเฉพาะเจ้าของ)
-- [ ] 6.4 **ลบข้อมูล/บัญชี** (right to erasure) + หน้า **Privacy Policy** *(ดู `CLAUDE.md §7.8`)*
+- [x] 6.1 **ล็อกอิน Email OTP** ผ่าน `updateUser({email})` + `verifyOtp(email_change)` (upgrade anonymous → permanent, uid เดิมคงอยู่) — *Google OAuth เลื่อนไป Phase 8 (ต้อง provision credential)*
+- [x] 6.2 จัดการ **identity conflict** (email ซ้ำ → ข้อความแนะนำให้ signin แทน) + โหมด signin (`signInWithOtp` + `verifyOtp(email)`)
+- [x] 6.3 หน้า **`/history`**: แสดงผลย้อนหลัง (RLS เห็นเฉพาะเจ้าของ) + ลบผลรายรายการ + banner ชวนล็อกอินเมื่อ anonymous
+- [x] 6.4 **ลบบัญชี/ข้อมูล** (right to erasure): ลบผลเดี่ยว (RLS) + ลบทั้งบัญชี (Server Action + `service_role` admin → cascade) *(หน้า Privacy Policy เต็มเลื่อน Phase 8)*
 
-**📦 Deliverables**: auth flow + `/history` + privacy page
+**📦 Deliverables**: `/account` (Email OTP + บัญชี + danger zone) + `/history` + `SiteHeader` + ลบข้อมูล
 
 **✅ Verification / DoD**
-- ทำเทสแบบ anonymous → ล็อกอิน → **ผลเทสเดิมยังอยู่**
-- ดู history ได้, ลบข้อมูลได้จริง
-- RLS กันไม่ให้เห็นผลของผู้ใช้อื่น
+- ทำเทสแบบ anonymous → ล็อกอิน → **ผลเทสเดิมยังอยู่** — ✅ พิสูจน์ uid-preservation (same_uid + results_follow)
+- ดู history ได้, ลบผลเดี่ยว + ลบบัญชี (cascade) ได้จริง — ✅ e2e ผ่าน (DB ยืนยัน user+session หาย)
+- RLS กันไม่ให้เห็นผลของผู้ใช้อื่น — ✅ ; OTP length fix (6–10 หลัก) ; security: service_role server-only
+- *หมายเหตุ: การส่งอีเมล OTP จริงจำกัดด้วย free-tier rate limit (~ไม่กี่ฉบับ/ชม.); verify mechanic พิสูจน์ผ่าน generateLink*
 
 ---
 
@@ -202,6 +203,7 @@
 | 3 | Scoring Engine (pure) | ✅ เสร็จ | 23 tests เขียว + Holland code ถูกต้อง (deterministic) |
 | 4 | Test-taking Flow (UI) | ✅ เสร็จ | ทำเทส mobile ครบ → บันทึก session (anon) → ไปหน้าผลเบื้องต้น (e2e ผ่าน) |
 | 5 | Results & Recommendation | ✅ เสร็จ | radar + บุคลิก + คำแนะนำสาย/อาชีพ/สาขา + เหตุผลจาก DB (e2e m3+m4_6 ผ่าน) |
+| 6 | Auth & History | ✅ เสร็จ | Email OTP upgrade (uid คงอยู่) + /history + ลบผล/ลบบัญชี (cascade) — e2e + DB ยืนยัน |
 | 6 | Auth & History | ☐ ยังไม่เริ่ม | upgrade anonymous ไม่เสียผล + history + ลบได้ |
 | 7 | ขยายคลังข้อมูล | ☐ ยังไม่เริ่ม | ไม่มี Holland code ไหนคำแนะนำว่างเปล่า |
 | 8 | Polish & Hardening | ☐ ยังไม่เริ่ม | Lighthouse ผ่าน + e2e เขียว + prod ผ่าน |

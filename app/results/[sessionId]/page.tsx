@@ -5,7 +5,7 @@ import { DimensionSummary } from "@/components/results/DimensionSummary";
 import { dimColors } from "@/components/results/dim-colors";
 import { RecommendationSection } from "@/components/results/RecommendationSection";
 import { RiasecRadar } from "@/components/results/RiasecRadar";
-import { ModeToggle } from "@/components/mode-toggle";
+import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RIASEC_DIMENSIONS, rankDimensions } from "@/lib/riasec";
@@ -59,6 +59,12 @@ export default async function ResultsPage({ params }: Props) {
       </ResultsShell>
     );
   }
+
+  // สถานะล็อกอิน — โชว์ CTA ชวนเก็บผลเฉพาะตอนยังเป็น anonymous
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isAnonymous = !!user?.is_anonymous;
 
   const scores = (session.scores ?? {}) as Partial<Record<RiasecDimension, number>>;
 
@@ -182,17 +188,39 @@ export default async function ResultsPage({ params }: Props) {
           </>
         )}
 
+        {/* CTA ชวนล็อกอินเก็บผล — เฉพาะตอนยังไม่ล็อกอิน (§7.8 ไม่บังคับ) */}
+        {isAnonymous && (
+          <Card className="bg-accent/40 ring-accent/60">
+            <CardContent className="space-y-3 text-center">
+              <div className="space-y-1">
+                <h2 className="font-semibold">{strings.results.saveCtaTitle}</h2>
+                <p className="text-muted-foreground text-sm">{strings.results.saveCtaDesc}</p>
+              </div>
+              <Button asChild className="h-11">
+                <Link href="/account">{strings.results.saveCtaButton}</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <p className="text-muted-foreground bg-muted/50 rounded-lg p-3 text-center text-sm">
           {strings.results.note}
         </p>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button asChild variant="outline" className="h-11">
-            <Link href="/test">{strings.results.retake}</Link>
-          </Button>
-          <Button asChild variant="outline" className="h-11">
-            <Link href="/">{strings.common.home}</Link>
-          </Button>
+        <div className="space-y-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Button asChild variant="outline" className="h-11">
+              <Link href="/test">{strings.results.retake}</Link>
+            </Button>
+            <Button asChild variant="outline" className="h-11">
+              <Link href="/">{strings.common.home}</Link>
+            </Button>
+          </div>
+          <div className="text-center">
+            <Button asChild variant="link" size="sm">
+              <Link href="/history">{strings.results.historyLink}</Link>
+            </Button>
+          </div>
         </div>
 
         <p className="text-muted-foreground text-center text-xs">{strings.riasec.source}</p>
@@ -211,12 +239,7 @@ function ResultsShell({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="mx-auto flex w-full max-w-xl items-center justify-between px-4 py-4">
-        <Link href="/" className="text-lg font-bold tracking-tight">
-          {strings.common.appName}
-        </Link>
-        <ModeToggle />
-      </header>
+      <SiteHeader />
       <main
         className={cn(
           "mx-auto flex w-full max-w-xl flex-1 flex-col px-4 py-8",

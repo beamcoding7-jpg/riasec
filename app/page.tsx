@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ModeToggle } from "@/components/mode-toggle";
+import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 
 // 6 ด้าน RIASEC — ใช้ตรวจว่าสีประจำด้าน + ฟอนต์ไทยแสดงผลถูก (หน้านี้ชั่วคราวสำหรับ Phase 1)
@@ -25,10 +25,7 @@ const dimensionColor: Record<string, string> = {
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
-        <span className="text-lg font-bold tracking-tight">RIASEC</span>
-        <ModeToggle />
-      </header>
+      <SiteHeader width="5xl" />
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-10 px-6 py-16 text-center">
         <div className="space-y-5">
