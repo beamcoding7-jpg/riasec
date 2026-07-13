@@ -15,8 +15,10 @@ import { strings } from "@/lib/strings";
 import { cn } from "@/lib/utils";
 import type { RiasecDimension } from "@/types";
 
+// ผลเป็นข้อมูลส่วนบุคคล — กัน search engine index (§7.8)
 export const metadata: Metadata = {
   title: strings.results.title,
+  robots: { index: false, follow: false },
 };
 
 // จำนวนคำแนะนำต่อหมวด
@@ -99,7 +101,7 @@ export default async function ResultsPage({ params }: Props) {
     <ResultsShell>
       <div className="space-y-10">
         {/* หัวเรื่อง + Holland code */}
-        <div className="space-y-4 text-center">
+        <div className="animate-in fade-in slide-in-from-bottom-2 space-y-4 text-center duration-500">
           <span className="bg-secondary text-secondary-foreground inline-block rounded-full px-3 py-1 text-xs font-medium">
             {strings.results.gradeBadge[grade]}
           </span>
@@ -241,6 +243,8 @@ function ResultsShell({
     <div className="flex flex-1 flex-col">
       <SiteHeader />
       <main
+        id="main-content"
+        tabIndex={-1}
         className={cn(
           "mx-auto flex w-full max-w-xl flex-1 flex-col px-4 py-8",
           center && "justify-center",

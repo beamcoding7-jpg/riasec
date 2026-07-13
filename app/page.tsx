@@ -1,72 +1,130 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
+import { dimColors } from "@/components/results/dim-colors";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { RIASEC_DIMENSIONS } from "@/lib/riasec";
+import { strings } from "@/lib/strings";
+import { cn } from "@/lib/utils";
 
-// 6 ด้าน RIASEC — ใช้ตรวจว่าสีประจำด้าน + ฟอนต์ไทยแสดงผลถูก (หน้านี้ชั่วคราวสำหรับ Phase 1)
-const riasecDimensions = [
-  { key: "r", label: "R", th: "นักปฏิบัติ" },
-  { key: "i", label: "I", th: "นักคิดวิเคราะห์" },
-  { key: "a", label: "A", th: "นักสร้างสรรค์" },
-  { key: "s", label: "S", th: "นักสังคม" },
-  { key: "e", label: "E", th: "นักบริหาร" },
-  { key: "c", label: "C", th: "นักจัดระบบ" },
-] as const;
-
-const dimensionColor: Record<string, string> = {
-  r: "bg-riasec-r",
-  i: "bg-riasec-i",
-  a: "bg-riasec-a",
-  s: "bg-riasec-s",
-  e: "bg-riasec-e",
-  c: "bg-riasec-c",
-};
+const { home } = strings;
 
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader width="5xl" />
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-10 px-6 py-16 text-center">
-        <div className="space-y-5">
-          <span className="bg-accent text-accent-foreground inline-block rounded-full px-4 py-1.5 text-sm font-medium">
-            แบบทดสอบค้นหาตัวเองสำหรับ ม.3–ม.6
-          </span>
-          <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl">
-            ค้นหาตัวเอง <span className="text-primary">ค้นหาอนาคต</span>
-          </h1>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg text-balance">
-            ทำแบบทดสอบตามทฤษฎี Holland RIASEC แล้วรับคำแนะนำสายการเรียน อาชีพ
-            และมหาวิทยาลัยที่เหมาะกับตัวคุณ — ฟรีทั้งหมด
-          </p>
-        </div>
+      <main id="main-content" tabIndex={-1} className="flex-1">
+        {/* Hero */}
+        <section className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 px-6 py-16 text-center sm:py-24">
+          <div className="animate-in fade-in slide-in-from-bottom-3 space-y-5 duration-700">
+            <span className="bg-accent text-accent-foreground inline-block rounded-full px-4 py-1.5 text-sm font-medium">
+              {home.heroBadge}
+            </span>
+            <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-6xl">
+              {home.heroTitleLead} <span className="text-primary">{home.heroTitleAccent}</span>
+            </h1>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg text-balance">
+              {home.heroLead}
+            </p>
+          </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Button size="lg" asChild>
-            <Link href="/test">เริ่มทำแบบทดสอบ</Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <Link href="/about">RIASEC คืออะไร</Link>
-          </Button>
-        </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button size="lg" asChild className="h-12 px-6 text-base">
+              <Link href="/test">
+                {home.ctaStart}
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild className="h-12 px-6 text-base">
+              <Link href="/about">{home.ctaAbout}</Link>
+            </Button>
+          </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          {riasecDimensions.map((d) => (
-            <div key={d.key} className="flex flex-col items-center gap-1.5">
-              <span
-                className={`flex size-12 items-center justify-center rounded-xl text-lg font-bold text-white ${dimensionColor[d.key]}`}
-              >
-                {d.label}
-              </span>
-              <span className="text-muted-foreground text-xs">{d.th}</span>
+          <p className="text-muted-foreground text-sm">{home.trustLine}</p>
+        </section>
+
+        {/* วิธีใช้งาน 3 ขั้น */}
+        <section className="bg-muted/40 border-border/60 border-y">
+          <div className="mx-auto w-full max-w-5xl px-6 py-16">
+            <div className="mb-10 space-y-2 text-center">
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{home.howTitle}</h2>
+              <p className="text-muted-foreground">{home.howLead}</p>
             </div>
-          ))}
-        </div>
+            <ol className="grid gap-5 sm:grid-cols-3">
+              {home.steps.map((step, i) => (
+                <li key={step.title}>
+                  <Card className="h-full">
+                    <CardContent className="space-y-3">
+                      <span className="bg-primary text-primary-foreground flex size-9 items-center justify-center rounded-full font-bold">
+                        {i + 1}
+                      </span>
+                      <h3 className="font-semibold">{step.title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+                    </CardContent>
+                  </Card>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* 6 มิติ RIASEC */}
+        <section className="mx-auto w-full max-w-5xl px-6 py-16">
+          <div className="mb-10 space-y-2 text-center">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{home.dimsTitle}</h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl">{home.dimsLead}</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {RIASEC_DIMENSIONS.map((dim) => {
+              const d = strings.riasec.dimensions[dim];
+              return (
+                <Card key={dim} className="h-full">
+                  <CardContent className="flex gap-3">
+                    <span
+                      className={cn(
+                        "flex size-11 shrink-0 items-center justify-center rounded-xl text-lg font-bold text-white",
+                        dimColors[dim].bg,
+                      )}
+                    >
+                      {d.letter}
+                    </span>
+                    <div className="space-y-1">
+                      <p className="font-semibold">
+                        {d.name}{" "}
+                        <span className="text-muted-foreground text-xs font-normal">{d.en}</span>
+                      </p>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{d.blurb}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* CTA ปิดท้าย */}
+        <section className="mx-auto w-full max-w-5xl px-6 pb-20">
+          <Card className="bg-primary text-primary-foreground border-transparent">
+            <CardContent className="flex flex-col items-center gap-5 py-10 text-center">
+              <h2 className="text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+                {home.footerCta}
+              </h2>
+              <Button size="lg" variant="secondary" asChild className="h-12 px-6 text-base">
+                <Link href="/test">
+                  {home.ctaStart}
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
       </main>
 
-      <footer className="text-muted-foreground mx-auto w-full max-w-5xl px-6 py-6 text-center text-sm">
-        กำลังพัฒนา · Phase 1 Foundation
-      </footer>
+      <SiteFooter width="5xl" />
     </div>
   );
 }

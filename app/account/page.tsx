@@ -23,7 +23,11 @@ export default async function AccountPage() {
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8"
+      >
         {isPermanent ? (
           <div className="space-y-6">
             <div className="space-y-1 text-center">

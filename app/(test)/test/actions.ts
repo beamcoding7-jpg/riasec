@@ -16,7 +16,7 @@ export async function submitTest(input: SubmitTestInput): Promise<SubmitResult |
   // 1) validate ที่ขอบ — อย่าเชื่อ client (§7.4)
   const parsed = submitTestSchema.safeParse(input);
   if (!parsed.success) return { error: strings.test.incomplete };
-  const { answers, gradeLevel } = parsed.data;
+  const { answers, gradeLevel, captchaToken } = parsed.data;
 
   const supabase = await createClient();
 
@@ -25,7 +25,10 @@ export async function submitTest(input: SubmitTestInput): Promise<SubmitResult |
   const { data: userData } = await supabase.auth.getUser();
   let userId = userData.user?.id;
   if (!userId) {
-    const { data: anon, error: anonError } = await supabase.auth.signInAnonymously();
+    // ส่ง captchaToken ให้ Supabase ตรวจ (เมื่อเปิด CAPTCHA protection) — กัน bot สร้าง anon รัว
+    const { data: anon, error: anonError } = await supabase.auth.signInAnonymously(
+      captchaToken ? { options: { captchaToken } } : undefined,
+    );
     if (anonError || !anon.user) return { error: strings.test.error };
     userId = anon.user.id;
   }

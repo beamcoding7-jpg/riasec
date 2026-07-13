@@ -4,12 +4,14 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
+import { Turnstile } from "@/components/Turnstile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { emailSchema, otpSchema } from "@/lib/auth/schema";
 import { createClient } from "@/lib/supabase/client";
 import { strings } from "@/lib/strings";
+import { turnstileEnabled } from "@/lib/turnstile";
 
 // โหมด: upgrade = ผูกอีเมลกับ anonymous เดิม (uid ไม่เปลี่ยน ผลตามไป) / signin = เข้าบัญชีเดิม
 type Mode = "upgrade" | "signin";
@@ -30,9 +32,15 @@ export function AuthForm({ isAnonymous }: { isAnonymous: boolean }) {
   const [code, setCode] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // ส่งรหัส OTP — upgrade ใช้ updateUser (ผูกอีเมล), signin ใช้ signInWithOtp
   async function sendCode(targetEmail: string): Promise<boolean> {
+    // signInWithOtp คือ endpoint ที่ Supabase CAPTCHA คุม → ต้องมี token เมื่อเปิด Turnstile
+    if (turnstileEnabled && mode === "signin" && !captchaToken) {
+      setError(strings.common.captchaRequired);
+      return false;
+    }
     setPending(true);
     setError(null);
     try {
@@ -51,7 +59,10 @@ export function AuthForm({ isAnonymous }: { isAnonymous: boolean }) {
         const { error } = await supabase.auth.signInWithOtp({
           email: targetEmail,
           // anonymous ที่กด "มีบัญชีอยู่แล้ว" ต้องเป็นบัญชีที่มีจริง (กันสร้างบัญชีซ้ำโดยไม่ตั้งใจ)
-          options: { shouldCreateUser: !isAnonymous },
+          options: {
+            shouldCreateUser: !isAnonymous,
+            captchaToken: captchaToken ?? undefined,
+          },
         });
         if (error) {
           setError(s.errSendFailed);
@@ -155,6 +166,9 @@ export function AuthForm({ isAnonymous }: { isAnonymous: boolean }) {
           {mode === "signin" && isAnonymous && (
             <p className="text-muted-foreground text-xs">{s.signInNote}</p>
           )}
+
+          {/* CAPTCHA เฉพาะ signin (endpoint ที่ Supabase คุม); โผล่เมื่อเปิด flag */}
+          {mode === "signin" && <Turnstile onToken={setCaptchaToken} />}
 
           {error && <p className="text-destructive text-sm">{error}</p>}
 

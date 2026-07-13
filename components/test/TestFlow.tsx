@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import { submitTest } from "@/app/(test)/test/actions";
+import { Turnstile } from "@/components/Turnstile";
 import { Button } from "@/components/ui/button";
 import { strings } from "@/lib/strings";
 import type { GradeLevel } from "@/lib/test/schema";
+import { turnstileEnabled } from "@/lib/turnstile";
 
 import { GradeIntro } from "./GradeIntro";
 import { LikertScale } from "./LikertScale";
@@ -24,6 +26,7 @@ export function TestFlow({ questions }: { questions: TestQuestion[] }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [index, setIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -68,10 +71,19 @@ export function TestFlow({ questions }: { questions: TestQuestion[] }) {
       setError(strings.test.incomplete);
       return;
     }
+    // เมื่อเปิด Turnstile ต้องได้ token ก่อนส่ง (กัน bot สร้าง anonymous user)
+    if (turnstileEnabled && !captchaToken) {
+      setError(strings.common.captchaRequired);
+      return;
+    }
     setError(null);
     startTransition(async () => {
       // สำเร็จ → server redirect ไปหน้าผล (ไม่คืนค่า); ล้มเหลว → { error }
-      const res = await submitTest({ answers, gradeLevel: grade });
+      const res = await submitTest({
+        answers,
+        gradeLevel: grade,
+        captchaToken: captchaToken ?? undefined,
+      });
       if (res?.error) setError(res.error);
     });
   }
@@ -85,6 +97,9 @@ export function TestFlow({ questions }: { questions: TestQuestion[] }) {
       <TestProgress current={index + 1} total={total} />
       <QuestionCard text={current.text} />
       <LikertScale name={current.id} value={answers[current.id] ?? null} onSelect={handleSelect} />
+
+      {/* Turnstile โผล่เฉพาะข้อสุดท้าย (ตอนใกล้ submit) และเฉพาะเมื่อเปิด flag */}
+      {isLast && <Turnstile onToken={setCaptchaToken} />}
 
       {error && <p className="text-destructive text-center text-sm">{error}</p>}
 

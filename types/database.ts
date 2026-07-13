@@ -335,7 +335,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      delete_old_anonymous_users: { Args: never; Returns: undefined };
     };
     Enums: {
       riasec_dimension: "R" | "I" | "A" | "S" | "E" | "C";

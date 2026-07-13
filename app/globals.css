@@ -153,3 +153,15 @@
     @apply font-sans;
   }
 }
+
+/* เคารพผู้ใช้ที่ตั้งค่า "ลดการเคลื่อนไหว" (a11y) — ปิด animation/transition ทั้งเว็บ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

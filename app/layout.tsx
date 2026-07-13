@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Noto_Sans_Thai, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { siteDescription, siteName, siteUrl } from "@/lib/site";
+import { strings } from "@/lib/strings";
 
 // ฟอนต์ไทยหลัก (self-host โดย next/font) — ผูกกับ --font-sans ที่ theme ใช้
 const notoSansThai = Noto_Sans_Thai({
@@ -17,13 +19,29 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const defaultTitle = "RIASEC — ค้นหาตัวเอง ค้นหาอนาคต";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "RIASEC — ค้นหาตัวเอง ค้นหาอนาคต",
+    default: defaultTitle,
     template: "%s · RIASEC",
   },
-  description:
-    "แบบทดสอบค้นหาตัวเองตามทฤษฎี Holland RIASEC สำหรับนักเรียน ม.3–ม.6 พร้อมแนะนำสายการเรียน อาชีพ และมหาวิทยาลัยที่เหมาะกับคุณ",
+  description: siteDescription,
+  applicationName: siteName,
+  openGraph: {
+    type: "website",
+    locale: "th_TH",
+    siteName,
+    title: defaultTitle,
+    description: siteDescription,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: siteDescription,
+  },
 };
 
 export default function RootLayout({
@@ -44,6 +62,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {/* Skip link (a11y) — ข้ามแถบนำทางไปเนื้อหาหลักด้วยคีย์บอร์ด */}
+          <a
+            href="#main-content"
+            className="focus:bg-primary focus:text-primary-foreground focus:ring-ring sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-2 focus:outline-none"
+          >
+            {strings.a11y.skipToContent}
+          </a>
           {children}
         </ThemeProvider>
       </body>

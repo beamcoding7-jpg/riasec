@@ -12,5 +12,7 @@ export type GradeLevel = z.infer<typeof gradeLevelSchema>;
 export const submitTestSchema = z.object({
   answers: answerMapSchema,
   gradeLevel: gradeLevelSchema,
+  // token จาก Turnstile (ถ้าเปิดใช้) — ส่งต่อให้ signInAnonymously กัน bot สร้าง anon รัว (§7.2)
+  captchaToken: z.string().optional(),
 });
 export type SubmitTestInput = z.infer<typeof submitTestSchema>;

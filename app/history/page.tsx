@@ -80,7 +80,7 @@ export default async function HistoryPage() {
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-xl flex-1 px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-xl flex-1 px-4 py-8">
         <div className="space-y-6">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight">{strings.history.title}</h1>

@@ -22,7 +22,7 @@ export default async function UniversitiesPage() {
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader width="5xl" />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
         <div className="mb-6 space-y-2">
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             {strings.universities.title}

@@ -26,7 +26,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .maybeSingle();
   if (!data) return { title: strings.careers.notFound };
-  return { title: data.name, description: data.short_desc ?? undefined };
+  const description = data.short_desc ?? undefined;
+  const ogTitle = `${data.name} · RIASEC`;
+  return {
+    title: data.name,
+    description,
+    openGraph: { title: ogTitle, description },
+    twitter: { title: ogTitle, description },
+  };
 }
 
 export default async function CareerDetailPage({ params }: Props) {
@@ -168,7 +175,9 @@ function DetailShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-xl flex-1 px-4 py-8">{children}</main>
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-xl flex-1 px-4 py-8">
+        {children}
+      </main>
     </div>
   );
 }

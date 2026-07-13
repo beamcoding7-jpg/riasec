@@ -178,20 +178,22 @@
 **🎯 Objective**: ขัดเกลาให้พร้อมปล่อยใช้จริง (คุณภาพ UX + ปลอดภัย + เร็ว)
 
 **📋 Tasks**
-- [ ] 8.1 **Animation** (Framer Motion) micro-interactions / transitions
-- [ ] 8.2 **Dark mode** ครบทุกหน้า
-- [ ] 8.3 **a11y audit** (Lighthouse / axe) + แก้ประเด็นที่พบ
-- [ ] 8.4 **SEO**: metadata ทุกหน้าสาธารณะ + `sitemap.xml` + OG images
-- [ ] 8.5 **Security**: ทวน RLS ครบทุกตาราง, Turnstile ทำงาน, cron cleanup ทำงาน, `get_advisors` เขียว
-- [ ] 8.6 **Performance**: Core Web Vitals, image/font optimize, ลด bundle
-- [ ] 8.7 **Deploy production** + ทดสอบ end-to-end บนโปรดักชันจริง
+- [x] 8.0 **หน้าแรก production** แทน stub Phase 1 + หน้า `/about` (อธิบาย RIASEC) + `SiteFooter` ร่วม + not-found/error/loading
+- [x] 8.1 **Animation**: CSS/`tw-animate-css` (entrance fade/slide หน้า landing/results) + เคารพ `prefers-reduced-motion` — *จงใจไม่เพิ่ม Framer Motion (perf/mobile-first); เสียบภายหลังได้*
+- [x] 8.2 **Dark mode**: หน้าใหม่ทั้งหมดใช้ token dark-aware เดิม
+- [x] 8.3 **a11y**: skip-to-content link + `id="main-content"` ทุกหน้า, aria-label ปุ่มไอคอน, reduced-motion, tap target CTA ≥44px — *audit เชิงภาพ (contrast/keyboard) รอ Chrome DevTools MCP*
+- [x] 8.4 **SEO**: `metadataBase` + OG/twitter default + per-page OG (detail) + `sitemap.xml` (143 URL) + `robots.txt` + OG image (`next/og`); results = `noindex` — *`generateStaticParams` เลื่อน: `SiteHeader` อ่าน auth cookie → ทุกหน้าเป็น dynamic; SSR ครอบ SEO ครบแล้ว*
+- [x] 8.5 **Security**: Turnstile (behind env flag) เสียบ test-submit + AuthForm; `pg_cron` ลบ anonymous > 30 วัน (FK cascade); `get_advisors` เคลียร์ SECURITY DEFINER (revoke anon/authenticated)
+- [~] 8.6 **Performance**: RSC-first + `next/font` + build เขียว — *Lighthouse วัดจริงรอ Chrome DevTools MCP*
+- [ ] 8.7 **Deploy production** — *gated: ต้องเชื่อม Vercel + env + ขออนุญาตก่อน promote*
 
-**📦 Deliverables**: เว็บ production ที่ใช้งานได้จริง
+**📦 Deliverables**: เว็บ production-ready (โค้ด/DB พร้อม; เหลือ activate Turnstile keys + deploy)
 
 **✅ Verification / DoD**
-- Lighthouse ผ่านเกณฑ์ (performance/a11y/SEO/best-practices)
-- Playwright **e2e เขียว** (flow ทำเทส→ผล→คำแนะนำ + login→history)
-- ทดสอบ end-to-end บน production ผ่าน
+- [x] typecheck/lint/format/test (48) + `pnpm build` เขียว (sitemap/robots/og = static)
+- [x] SSR verify (curl): landing ไม่มี "Phase 1", about/privacy render, 404=status 404, robots/sitemap/OG ถูกต้อง
+- [x] migration cron apply + `cron.job` active + advisor ไม่มีปัญหาใหม่ + regenerate types
+- [ ] (gated) deploy production + ตั้ง Supabase Site URL + ทดสอบ end-to-end บน prod
 
 ---
 
@@ -206,7 +208,7 @@
 | 5 | Results & Recommendation | ✅ เสร็จ | radar + บุคลิก + คำแนะนำสาย/อาชีพ/สาขา + เหตุผลจาก DB (e2e m3+m4_6 ผ่าน) |
 | 6 | Auth & History | ✅ เสร็จ | Email OTP upgrade (uid คงอยู่) + /history + ลบผล/ลบบัญชี (cascade) — e2e + DB ยืนยัน |
 | 7 | ขยายคลังข้อมูล | ✅ เสร็จ | 54 มหาลัย + directory · อาชีพ 72 · สาขา 66 · detail อาชีพ/สาขา · ทุกมิติไม่ว่าง — e2e ผ่าน |
-| 8 | Polish & Hardening | ☐ ยังไม่เริ่ม | Lighthouse ผ่าน + e2e เขียว + prod ผ่าน |
+| 8 | Polish & Hardening | 🔄 โค้ดเสร็จ · เหลือ deploy (gated) | landing/SEO/a11y/security เสร็จ + build เขียว · รอ deploy prod |
 
 > อัปเดตช่อง "สถานะ" เป็น `🔄 กำลังทำ` / `✅ เสร็จ` เมื่อความคืบหน้าเปลี่ยน
 

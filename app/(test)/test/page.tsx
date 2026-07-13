@@ -31,7 +31,11 @@ export default async function TestPage() {
         <ModeToggle />
       </header>
 
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-4 py-6">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-4 py-6"
+      >
         {error ? (
           <p className="text-muted-foreground text-center">{strings.test.loadError}</p>
         ) : !questions || questions.length === 0 ? (
