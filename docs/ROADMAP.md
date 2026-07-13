@@ -181,10 +181,10 @@
 - [x] 8.0 **หน้าแรก production** แทน stub Phase 1 + หน้า `/about` (อธิบาย RIASEC) + `SiteFooter` ร่วม + not-found/error/loading
 - [x] 8.1 **Animation**: CSS/`tw-animate-css` (entrance fade/slide หน้า landing/results) + เคารพ `prefers-reduced-motion` — *จงใจไม่เพิ่ม Framer Motion (perf/mobile-first); เสียบภายหลังได้*
 - [x] 8.2 **Dark mode**: หน้าใหม่ทั้งหมดใช้ token dark-aware เดิม
-- [x] 8.3 **a11y**: skip-to-content link + `id="main-content"` ทุกหน้า, aria-label ปุ่มไอคอน, reduced-motion, tap target CTA ≥44px — *audit เชิงภาพ (contrast/keyboard) รอ Chrome DevTools MCP*
+- [x] 8.3 **a11y**: skip-to-content link + `id="main-content"` ทุกหน้า, aria-label ปุ่มไอคอน, reduced-motion, tap target ≥44px — *audit Chrome DevTools MCP เสร็จ (2026-07-14): แก้ contrast (chip ตัวอักษรดำ + radar label สีกลาง + token `--link` แยกจาก primary) + ดันทุกปุ่ม ≥44px → contrast/tap = 0 ทุกหน้า ทั้ง light/dark*
 - [x] 8.4 **SEO**: `metadataBase` + OG/twitter default + per-page OG (detail) + `sitemap.xml` (143 URL) + `robots.txt` + OG image (`next/og`); results = `noindex` — *`generateStaticParams` เลื่อน: `SiteHeader` อ่าน auth cookie → ทุกหน้าเป็น dynamic; SSR ครอบ SEO ครบแล้ว*
 - [x] 8.5 **Security**: Turnstile (behind env flag) เสียบ test-submit + AuthForm; `pg_cron` ลบ anonymous > 30 วัน (FK cascade); `get_advisors` เคลียร์ SECURITY DEFINER (revoke anon/authenticated)
-- [~] 8.6 **Performance**: RSC-first + `next/font` + build เขียว — *Lighthouse วัดจริงรอ Chrome DevTools MCP*
+- [x] 8.6 **Performance/a11y audit**: RSC-first + `next/font` + build เขียว · **Lighthouse (prod, mobile): หน้าแรก a11y/best-practices/SEO = 100; หน้าผล a11y/BP = 100 (SEO 63 = `noindex` ที่ตั้งใจ)**
 - [ ] 8.7 **Deploy production** — *gated: ต้องเชื่อม Vercel + env + ขออนุญาตก่อน promote*
 
 **📦 Deliverables**: เว็บ production-ready (โค้ด/DB พร้อม; เหลือ activate Turnstile keys + deploy)
@@ -208,7 +208,7 @@
 | 5 | Results & Recommendation | ✅ เสร็จ | radar + บุคลิก + คำแนะนำสาย/อาชีพ/สาขา + เหตุผลจาก DB (e2e m3+m4_6 ผ่าน) |
 | 6 | Auth & History | ✅ เสร็จ | Email OTP upgrade (uid คงอยู่) + /history + ลบผล/ลบบัญชี (cascade) — e2e + DB ยืนยัน |
 | 7 | ขยายคลังข้อมูล | ✅ เสร็จ | 54 มหาลัย + directory · อาชีพ 72 · สาขา 66 · detail อาชีพ/สาขา · ทุกมิติไม่ว่าง — e2e ผ่าน |
-| 8 | Polish & Hardening | 🔄 โค้ดเสร็จ · เหลือ deploy (gated) | landing/SEO/a11y/security เสร็จ + build เขียว · รอ deploy prod |
+| 8 | Polish & Hardening | 🔄 โค้ด+a11y audit เสร็จ · เหลือ deploy (gated) | landing/SEO/a11y/security + Chrome a11y audit (Lighthouse 100) เสร็จ · รอ deploy prod + activate Turnstile |
 
 > อัปเดตช่อง "สถานะ" เป็น `🔄 กำลังทำ` / `✅ เสร็จ` เมื่อความคืบหน้าเปลี่ยน
 
