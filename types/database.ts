@@ -76,6 +76,7 @@ export type Database = {
           faculty_id: string;
           id: string;
           name: string;
+          slug: string | null;
           source: string | null;
           what_you_learn: string | null;
         };
@@ -84,6 +85,7 @@ export type Database = {
           faculty_id: string;
           id?: string;
           name: string;
+          slug?: string | null;
           source?: string | null;
           what_you_learn?: string | null;
         };
@@ -92,6 +94,7 @@ export type Database = {
           faculty_id?: string;
           id?: string;
           name?: string;
+          slug?: string | null;
           source?: string | null;
           what_you_learn?: string | null;
         };

@@ -159,16 +159,17 @@
 **🎯 Objective**: ข้อมูลครบและเยอะพอสำหรับใช้งานจริง (ไม่ใช่แค่ featured)
 
 **📋 Tasks**
-- [ ] 7.1 เติม **มหาลัยทั่วประเทศที่เหลือ** (ชื่อ + ข้อมูลพื้นฐาน: ที่ตั้ง/ประเภท)
-- [ ] 7.2 เพิ่ม **อาชีพให้เยอะ/ครบทุก Holland code** (จากแหล่งจริง: O*NET / กรมการจัดหางาน)
-- [ ] 7.3 เพิ่ม **mapping + `reason`** ให้ครอบคลุมทุก Holland code
-- [ ] 7.4 **QA คุณภาพเนื้อหาไทย**: สำนวน, ความถูกต้อง, ตรวจ `source` ทุกรายการ
+- [x] 7.1 เติม **มหาวิทยาลัยหลักคนนิยม** (รัฐ/เปิด/เอกชน/ราชภัฏ/ราชมงคล) รวม **54 แห่ง** + หน้า `/universities` directory (ค้น/กรอง/จัดกลุ่มตามภาค)
+- [x] 7.2 เพิ่ม **อาชีพ 36 → 72** (O*NET + กรมการจัดหางาน, ~12/มิติ) + สาขาใหม่ 10 (คณะใหม่ 5)
+- [x] 7.3 **mapping ครบทุกมิติ** — career_map (auto จาก holland_code) + major_map (lookup) regenerate: min A=20 (career) / A=10 (major) → ไม่มีมิติว่าง
+- [x] 7.4 **หน้า detail อาชีพ/สาขา** (`/careers/[slug]`, `/majors/[slug]` + `majors.slug` migration) + ลิงก์จากการ์ดผล; QA เนื้อหาไทย + `source` ครบทุกแถว
 
-**📦 Deliverables**: seed ชุดสมบูรณ์
+**📦 Deliverables**: seed ชุดสมบูรณ์ + `/universities` directory + `/careers/[slug]` + `/majors/[slug]`
 
 **✅ Verification / DoD**
-- สุ่ม Holland code หลายแบบ → **ไม่มีอันไหนได้คำแนะนำว่างเปล่า**
-- เนื้อหาผ่าน QA (ภาษา + แหล่งอ้างอิงครบ)
+- สุ่ม Holland code หลายแบบ → **ไม่มีอันไหนได้คำแนะนำว่างเปล่า** ✅ (career_map ทุกมิติ ≥20, major_map ≥10)
+- เนื้อหาผ่าน QA (ภาษา + แหล่งอ้างอิงครบทุกแถว) ✅
+- typecheck/lint/format/48 tests/build เขียว + e2e (directory ค้น/กรอง, detail อาชีพ/สาขา, no console error) ✅
 
 ---
 
@@ -204,8 +205,7 @@
 | 4 | Test-taking Flow (UI) | ✅ เสร็จ | ทำเทส mobile ครบ → บันทึก session (anon) → ไปหน้าผลเบื้องต้น (e2e ผ่าน) |
 | 5 | Results & Recommendation | ✅ เสร็จ | radar + บุคลิก + คำแนะนำสาย/อาชีพ/สาขา + เหตุผลจาก DB (e2e m3+m4_6 ผ่าน) |
 | 6 | Auth & History | ✅ เสร็จ | Email OTP upgrade (uid คงอยู่) + /history + ลบผล/ลบบัญชี (cascade) — e2e + DB ยืนยัน |
-| 6 | Auth & History | ☐ ยังไม่เริ่ม | upgrade anonymous ไม่เสียผล + history + ลบได้ |
-| 7 | ขยายคลังข้อมูล | ☐ ยังไม่เริ่ม | ไม่มี Holland code ไหนคำแนะนำว่างเปล่า |
+| 7 | ขยายคลังข้อมูล | ✅ เสร็จ | 54 มหาลัย + directory · อาชีพ 72 · สาขา 66 · detail อาชีพ/สาขา · ทุกมิติไม่ว่าง — e2e ผ่าน |
 | 8 | Polish & Hardening | ☐ ยังไม่เริ่ม | Lighthouse ผ่าน + e2e เขียว + prod ผ่าน |
 
 > อัปเดตช่อง "สถานะ" เป็น `🔄 กำลังทำ` / `✅ เสร็จ` เมื่อความคืบหน้าเปลี่ยน

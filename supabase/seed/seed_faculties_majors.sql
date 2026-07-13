@@ -156,3 +156,67 @@ from (values
   ('การบัญชี', 'การบัญชีการเงิน บัญชีบริหาร ภาษี และการสอบบัญชี', 'นักบัญชี ผู้สอบบัญชี ที่ปรึกษาภาษี นักวิเคราะห์การเงิน')
 ) as c(name, wyl, cp)
 where m.name = c.name;
+
+-- ══════════ Phase 7 · เพิ่มคณะ/สาขา (เน้นมิติ A/E/C/S ที่ยังบาง) + backfill slug ══════════
+-- แหล่ง: เว็บทางการคณะ/มหาวิทยาลัย + TCAS (mytcas.com)
+
+-- (A7) คณะใหม่
+insert into faculties (university_id, name, slug) values
+((select id from universities where slug='chula'),     'คณะนิเทศศาสตร์',           'chula-comm'),
+((select id from universities where slug='thammasat'), 'คณะเศรษฐศาสตร์',           'tu-econ'),
+((select id from universities where slug='thammasat'), 'คณะสังคมสงเคราะห์ศาสตร์',   'tu-socialwork'),
+((select id from universities where slug='mahidol'),   'คณะสาธารณสุขศาสตร์',       'mahidol-ph'),
+((select id from universities where slug='buu'),       'คณะโลจิสติกส์',            'buu-logistics')
+on conflict (university_id, name) do update set slug = excluded.slug;
+
+-- (B7) สาขาใหม่ (ชื่อมาตรฐาน)
+insert into majors (faculty_id, name) values
+((select id from faculties where slug='chula-comm'),     'นิเทศศาสตร์'),
+((select id from faculties where slug='tu-econ'),        'เศรษฐศาสตร์'),
+((select id from faculties where slug='tu-socialwork'),  'สังคมสงเคราะห์ศาสตร์'),
+((select id from faculties where slug='mahidol-ph'),     'สาธารณสุขศาสตร์'),
+((select id from faculties where slug='buu-logistics'),  'การจัดการโลจิสติกส์'),
+((select id from faculties where slug='chula-commerce'), 'สถิติ'),
+((select id from faculties where slug='tu-commerce'),    'การเงิน'),
+((select id from faculties where slug='tu-polsci'),      'ความสัมพันธ์ระหว่างประเทศ'),
+((select id from faculties where slug='psu-mgmt'),       'การจัดการการท่องเที่ยวและการบริการ'),
+((select id from faculties where slug='su-decor'),       'การออกแบบภายใน')
+on conflict (faculty_id, name) do nothing;
+
+-- (C7) เนื้อหาสาขาใหม่ (by-name)
+update majors m set what_you_learn = c.wyl, career_paths = c.cp, source = 'หลักสูตรจริง + TCAS (mytcas.com)'
+from (values
+  ('นิเทศศาสตร์', 'การสื่อสารมวลชน วารสารศาสตร์ โฆษณา ประชาสัมพันธ์ และสื่อดิจิทัล', 'นักสื่อสารมวลชน ครีเอทีฟ นักประชาสัมพันธ์ ผู้ผลิตคอนเทนต์'),
+  ('เศรษฐศาสตร์', 'ทฤษฎีเศรษฐศาสตร์ การวิเคราะห์ตลาด นโยบายเศรษฐกิจ และเศรษฐมิติ', 'นักเศรษฐศาสตร์ นักวิเคราะห์ นักวางแผนนโยบาย เจ้าหน้าที่ธนาคาร'),
+  ('สังคมสงเคราะห์ศาสตร์', 'การช่วยเหลือกลุ่มเปราะบาง สวัสดิการสังคม และการพัฒนาชุมชน', 'นักสังคมสงเคราะห์ นักพัฒนาชุมชน เจ้าหน้าที่องค์กรพัฒนาเอกชน'),
+  ('สาธารณสุขศาสตร์', 'การป้องกันโรค ส่งเสริมสุขภาพ อนามัยสิ่งแวดล้อม และระบาดวิทยา', 'นักวิชาการสาธารณสุข นักระบาดวิทยา เจ้าหน้าที่ส่งเสริมสุขภาพ'),
+  ('การจัดการโลจิสติกส์', 'การจัดการโซ่อุปทาน คลังสินค้า การขนส่ง และการค้าระหว่างประเทศ', 'นักวางแผนโลจิสติกส์ ผู้จัดการคลังสินค้า เจ้าหน้าที่นำเข้า-ส่งออก'),
+  ('สถิติ', 'ความน่าจะเป็น การวิเคราะห์ข้อมูล และสถิติประยุกต์', 'นักสถิติ นักวิเคราะห์ข้อมูล นักวิทยาศาสตร์ข้อมูล นักคณิตศาสตร์ประกันภัย'),
+  ('การเงิน', 'การเงินองค์กร การลงทุน ตลาดทุน และการบริหารความเสี่ยง', 'นักวิเคราะห์การเงิน วาณิชธนกร ที่ปรึกษาการลงทุน เจ้าหน้าที่การเงิน'),
+  ('ความสัมพันธ์ระหว่างประเทศ', 'การเมืองระหว่างประเทศ การทูต กฎหมายระหว่างประเทศ และองค์การโลก', 'นักการทูต เจ้าหน้าที่องค์การระหว่างประเทศ นักวิเคราะห์นโยบายต่างประเทศ'),
+  ('การจัดการการท่องเที่ยวและการบริการ', 'ธุรกิจท่องเที่ยว โรงแรม งานบริการ และการจัดการอีเวนต์', 'ผู้จัดการโรงแรม ผู้ประกอบการท่องเที่ยว มัคคุเทศก์ นักวางแผนอีเวนต์'),
+  ('การออกแบบภายใน', 'การออกแบบพื้นที่ภายใน วัสดุ แสง สี และเฟอร์นิเจอร์', 'นักออกแบบภายใน มัณฑนากร นักออกแบบนิทรรศการ')
+) as c(name, wyl, cp)
+where m.name = c.name;
+
+-- (D7) backfill slug ทุกสาขา = <ascii ของชื่อ>-<uni-slug> (unique เพราะต่อท้ายมหาลัย)
+update majors m
+set slug = a.ascii || '-' || u.slug
+from faculties f, universities u, (values
+  ('วิศวกรรมโยธา','civil-eng'), ('วิศวกรรมเครื่องกล','mech-eng'), ('วิศวกรรมไฟฟ้า','elec-eng'),
+  ('วิศวกรรมคอมพิวเตอร์','comp-eng'), ('วิทยาการคอมพิวเตอร์','comp-sci'), ('เทคโนโลยีสารสนเทศ','it'),
+  ('แพทยศาสตร์','medicine'), ('เภสัชศาสตร์','pharmacy'), ('พยาบาลศาสตร์','nursing'),
+  ('วิทยาศาสตร์','science'), ('เกษตรศาสตร์','agriculture'), ('ประมง','fisheries'),
+  ('อักษรศาสตร์','liberal-arts'), ('ภาษาอังกฤษ','english'), ('ทัศนศิลป์','visual-arts'),
+  ('สถาปัตยกรรม','architecture'), ('ออกแบบนิเทศศิลป์','communication-design'),
+  ('ดุริยางคศาสตร์','music'), ('ดนตรีและการแสดง','music-performance'),
+  ('ครุศาสตร์','education'), ('ศึกษาศาสตร์','edu-science'), ('การศึกษา','edu-studies'),
+  ('ครุศาสตร์อุตสาหกรรม','industrial-edu'), ('จิตวิทยา','psychology'), ('นิติศาสตร์','law'),
+  ('รัฐศาสตร์','political-science'), ('การตลาด','marketing'), ('บริหารธุรกิจ','business-admin'),
+  ('การบัญชี','accounting'), ('นิเทศศาสตร์','communication-arts'), ('เศรษฐศาสตร์','economics'),
+  ('สังคมสงเคราะห์ศาสตร์','social-work'), ('สาธารณสุขศาสตร์','public-health'),
+  ('การจัดการโลจิสติกส์','logistics'), ('สถิติ','statistics'), ('การเงิน','finance'),
+  ('ความสัมพันธ์ระหว่างประเทศ','international-relations'),
+  ('การจัดการการท่องเที่ยวและการบริการ','tourism-hospitality'), ('การออกแบบภายใน','interior-design')
+) as a(name, ascii)
+where m.faculty_id = f.id and f.university_id = u.id and m.name = a.name;

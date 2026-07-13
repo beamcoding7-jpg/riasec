@@ -12,6 +12,7 @@ export const strings = {
     signIn: "เข้าสู่ระบบ",
     account: "บัญชี",
     history: "ประวัติ",
+    universities: "มหาวิทยาลัย", // ลิงก์ directory (Phase 7)
     back: "ย้อนกลับ",
     cancel: "ยกเลิก",
   },
@@ -109,6 +110,7 @@ export const strings = {
     careerDetailLabel: "อาชีพนี้ทำอะไร",
     majorLearnLabel: "เรียนอะไรบ้าง",
     majorPathsLabel: "ต่อยอดอาชีพ",
+    detailLink: "ดูรายละเอียดเต็ม", // ลิงก์การ์ด → detail route (Phase 7)
     emptyRecs: "ยังไม่มีคำแนะนำสำหรับผลนี้",
     note: "ผลนี้เป็นแนวทางช่วยให้รู้จักตัวเองมากขึ้น ไม่ใช่คำตัดสิน — ลองใช้เป็นจุดเริ่มต้นในการสำรวจต่อนะ",
     notFound: "ไม่พบผลการทำแบบทดสอบนี้",
@@ -178,6 +180,55 @@ export const strings = {
     anonBannerText:
       "ผลเหล่านี้ผูกกับเบราว์เซอร์นี้เท่านั้น — เข้าสู่ระบบเพื่อเก็บถาวรและดูข้ามอุปกรณ์",
     anonBannerCta: "เข้าสู่ระบบ",
+  },
+
+  // ป้ายภูมิภาค (คีย์ตรงกับ Region ใน lib/th/regions) — Phase 7
+  regions: {
+    bangkok: "กรุงเทพฯ และปริมณฑล",
+    central: "ภาคกลาง",
+    north: "ภาคเหนือ",
+    northeast: "ภาคตะวันออกเฉียงเหนือ",
+    east: "ภาคตะวันออก",
+    west: "ภาคตะวันตก",
+    south: "ภาคใต้",
+    other: "อื่น ๆ",
+  },
+
+  // หน้า directory มหาวิทยาลัย (Phase 7)
+  universities: {
+    title: "มหาวิทยาลัยในไทย",
+    lead: "รวมมหาวิทยาลัยหลักทั่วประเทศ ค้นหาหรือกรองตามประเภท แล้วกดเข้าเว็บทางการเพื่อดูข้อมูลรับสมัคร",
+    searchPlaceholder: "ค้นหาชื่อมหาวิทยาลัย...",
+    filterAll: "ทั้งหมด",
+    featured: "แนะนำ",
+    visitSite: "เว็บทางการ",
+    empty: "ไม่พบมหาวิทยาลัยที่ตรงกับการค้นหา",
+    countSuffix: "แห่ง",
+  },
+
+  // หน้า detail อาชีพ (Phase 7)
+  careers: {
+    backToResults: "กลับไปหน้าผล",
+    hollandLabel: "Holland code ของอาชีพนี้",
+    aboutLabel: "อาชีพนี้ทำอะไร",
+    relatedMajors: "สาขาที่เกี่ยวข้อง",
+    relatedMajorsDesc: "สาขาในมหาวิทยาลัยที่ต่อยอดสู่อาชีพนี้ได้",
+    notFound: "ไม่พบอาชีพนี้",
+    notFoundDesc: "อาจถูกลบไปแล้ว หรือลิงก์ไม่ถูกต้อง",
+    ctaTest: "ทำแบบทดสอบหาอาชีพที่ใช่",
+  },
+
+  // หน้า detail สาขา (Phase 7)
+  majors: {
+    backToResults: "กลับไปหน้าผล",
+    learnLabel: "เรียนอะไรบ้าง",
+    pathsLabel: "ต่อยอดอาชีพ",
+    relatedCareers: "อาชีพที่เกี่ยวข้อง",
+    relatedCareersDesc: "อาชีพที่เชื่อมโยงกับความสนใจของสาขานี้",
+    atUniversity: "เปิดสอนที่",
+    notFound: "ไม่พบสาขานี้",
+    notFoundDesc: "อาจถูกลบไปแล้ว หรือลิงก์ไม่ถูกต้อง",
+    ctaTest: "ทำแบบทดสอบหาสาขาที่ใช่",
   },
 } as const;
 

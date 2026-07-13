@@ -78,7 +78,7 @@ export async function getCareerRecs(
 ): Promise<Recommendation[]> {
   const { data, error } = await supabase
     .from("riasec_career_map")
-    .select("dimension, weight, reason, career:careers(id, name, short_desc, detail)");
+    .select("dimension, weight, reason, career:careers(id, name, short_desc, detail, slug)");
   if (error || !data) return [];
 
   return buildRecommendations(
@@ -97,6 +97,7 @@ export async function getCareerRecs(
       subtitle: c.short_desc,
       why,
       body: c.detail ? [{ label: strings.results.careerDetailLabel, text: c.detail }] : [],
+      href: `/careers/${c.slug}`,
     }),
   );
 }
@@ -110,7 +111,7 @@ export async function getMajorRecs(
   const { data, error } = await supabase
     .from("riasec_major_map")
     .select(
-      "dimension, weight, reason, major:majors(id, name, what_you_learn, career_paths, faculty:faculties(name, university:universities(name, province)))",
+      "dimension, weight, reason, major:majors(id, name, slug, what_you_learn, career_paths, faculty:faculties(name, university:universities(name, province)))",
     );
   if (error || !data) return [];
 
@@ -132,7 +133,15 @@ export async function getMajorRecs(
         body.push({ label: strings.results.majorLearnLabel, text: m.what_you_learn });
       if (m.career_paths)
         body.push({ label: strings.results.majorPathsLabel, text: m.career_paths });
-      return { id: m.id, title: m.name, badgeDim, subtitle, why, body };
+      return {
+        id: m.id,
+        title: m.name,
+        badgeDim,
+        subtitle,
+        why,
+        body,
+        href: m.slug ? `/majors/${m.slug}` : undefined,
+      };
     },
   );
 }

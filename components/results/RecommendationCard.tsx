@@ -1,4 +1,5 @@
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 import { strings } from "@/lib/strings";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,7 @@ export type Recommendation = {
   subtitle: string | null;
   why: string | null; // เหตุผล "ทำไมถึงเหมาะกับคุณ" (จาก *_map.reason)
   body: RecommendationBody[];
+  href?: string; // ลิงก์ไปหน้า detail (อาชีพ/สาขา) — สายเรียนไม่มี detail route (Phase 7)
 };
 
 // การ์ดขยายได้ด้วย native <details> — zero client JS (RSC-first §6)
@@ -64,6 +66,15 @@ export function RecommendationCard({ rec }: { rec: Recommendation }) {
             <p className="mt-1 text-sm leading-relaxed">{section.text}</p>
           </div>
         ))}
+        {rec.href && (
+          <Link
+            href={rec.href}
+            className="text-primary inline-flex items-center gap-1 text-sm font-medium hover:underline"
+          >
+            {strings.results.detailLink}
+            <ArrowRight className="size-4" />
+          </Link>
+        )}
       </div>
     </details>
   );

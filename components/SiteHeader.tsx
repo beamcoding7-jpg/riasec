@@ -27,6 +27,9 @@ export async function SiteHeader({ width = "xl" }: { width?: "xl" | "5xl" }) {
       </Link>
       <nav className="flex items-center gap-1">
         <Button variant="ghost" size="sm" asChild>
+          <Link href="/universities">{strings.common.universities}</Link>
+        </Button>
+        <Button variant="ghost" size="sm" asChild>
           <Link href="/history">{strings.common.history}</Link>
         </Button>
         <Button variant="ghost" size="sm" asChild>
