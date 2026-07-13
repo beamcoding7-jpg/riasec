@@ -40,7 +40,7 @@ export default function AboutPage() {
                     <CardContent className="flex gap-3">
                       <span
                         className={cn(
-                          "flex size-10 shrink-0 items-center justify-center rounded-lg text-base font-bold text-white",
+                          "flex size-10 shrink-0 items-center justify-center rounded-lg text-base font-bold text-black",
                           dimColors[dim].bg,
                         )}
                       >

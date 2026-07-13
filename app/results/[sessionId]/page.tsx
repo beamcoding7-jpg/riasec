@@ -113,7 +113,7 @@ export default async function ResultsPage({ params }: Props) {
                 <span
                   key={`${dim}-${i}`}
                   className={cn(
-                    "flex size-12 items-center justify-center rounded-xl text-2xl font-bold text-white",
+                    "flex size-12 items-center justify-center rounded-xl text-2xl font-bold text-black",
                     dimColors[dim].bg,
                   )}
                 >
@@ -136,7 +136,7 @@ export default async function ResultsPage({ params }: Props) {
                   <div key={dim} className="flex items-center gap-3">
                     <span
                       className={cn(
-                        "flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-bold text-white",
+                        "flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-bold text-black",
                         dimColors[dim].bg,
                       )}
                     >
@@ -219,7 +219,7 @@ export default async function ResultsPage({ params }: Props) {
             </Button>
           </div>
           <div className="text-center">
-            <Button asChild variant="link" size="sm">
+            <Button asChild variant="link" size="sm" className="h-11">
               <Link href="/history">{strings.results.historyLink}</Link>
             </Button>
           </div>

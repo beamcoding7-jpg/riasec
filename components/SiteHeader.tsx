@@ -22,17 +22,17 @@ export async function SiteHeader({ width = "xl" }: { width?: "xl" | "5xl" }) {
         width === "5xl" ? "max-w-5xl" : "max-w-xl",
       )}
     >
-      <Link href="/" className="text-lg font-bold tracking-tight">
+      <Link href="/" className="flex h-11 items-center text-lg font-bold tracking-tight">
         {strings.common.appName}
       </Link>
       <nav className="flex items-center gap-1">
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" asChild className="h-11 px-3">
           <Link href="/universities">{strings.common.universities}</Link>
         </Button>
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" asChild className="h-11 px-3">
           <Link href="/history">{strings.common.history}</Link>
         </Button>
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" asChild className="h-11 px-3">
           <Link href="/account">
             {isPermanent ? strings.common.account : strings.common.signIn}
           </Link>

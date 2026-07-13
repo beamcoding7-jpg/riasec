@@ -179,7 +179,7 @@ export function AuthForm({ isAnonymous }: { isAnonymous: boolean }) {
 
           {isAnonymous && (
             <div className="text-center">
-              <Button type="button" variant="link" size="sm" onClick={switchMode}>
+              <Button type="button" variant="link" size="sm" className="h-11" onClick={switchMode}>
                 {mode === "upgrade" ? s.switchToSignIn : s.switchToUpgrade}
               </Button>
             </div>
@@ -220,13 +220,21 @@ export function AuthForm({ isAnonymous }: { isAnonymous: boolean }) {
               type="button"
               variant="link"
               size="sm"
+              className="h-11"
               onClick={() => sendCode(sentEmail)}
               disabled={pending}
             >
               {s.resend}
             </Button>
             <span className="text-muted-foreground text-xs">·</span>
-            <Button type="button" variant="link" size="sm" onClick={changeEmail} disabled={pending}>
+            <Button
+              type="button"
+              variant="link"
+              size="sm"
+              className="h-11"
+              onClick={changeEmail}
+              disabled={pending}
+            >
               {s.changeEmail}
             </Button>
           </div>

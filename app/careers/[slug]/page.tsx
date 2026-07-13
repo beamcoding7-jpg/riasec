@@ -72,7 +72,7 @@ export default async function CareerDetailPage({ params }: Props) {
     <DetailShell>
       <div className="space-y-8">
         <div className="space-y-3">
-          <Button asChild variant="ghost" size="sm" className="-ml-2 h-8">
+          <Button asChild variant="ghost" size="sm" className="-ml-2 h-11">
             <Link href="/history">← {strings.careers.backToResults}</Link>
           </Button>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{career.name}</h1>
@@ -93,7 +93,7 @@ export default async function CareerDetailPage({ params }: Props) {
                   >
                     <span
                       className={cn(
-                        "flex size-7 items-center justify-center rounded-md text-xs font-bold text-white",
+                        "flex size-7 items-center justify-center rounded-md text-xs font-bold text-black",
                         dimColors[dim].bg,
                       )}
                     >
@@ -127,7 +127,10 @@ export default async function CareerDetailPage({ params }: Props) {
             <div className="grid gap-3 sm:grid-cols-2">
               {relatedMajors.map((m) => (
                 <Link key={m.slug} href={`/majors/${m.slug}`}>
-                  <Card size="sm" className="hover:ring-primary/40 h-full transition-[box-shadow]">
+                  <Card
+                    size="sm"
+                    className="hover:ring-primary/40 h-full min-h-11 transition-[box-shadow]"
+                  >
                     <CardContent>
                       <p className="leading-tight font-medium">{m.name}</p>
                       {m.university && (

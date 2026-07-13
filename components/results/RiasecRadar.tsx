@@ -1,6 +1,5 @@
 import { RIASEC_DIMENSIONS } from "@/lib/riasec";
 import { strings } from "@/lib/strings";
-import { cn } from "@/lib/utils";
 import type { RiasecDimension } from "@/types";
 
 import { dimColors } from "./dim-colors";
@@ -106,7 +105,7 @@ export function RiasecRadar({ scores }: Props) {
             y={labelPt.y}
             textAnchor={anchor}
             dominantBaseline="middle"
-            className={cn("text-[13px] font-bold", dimColors[dim].fill)}
+            className="fill-foreground text-[13px] font-bold"
           >
             {meta.letter}
           </text>

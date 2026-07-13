@@ -86,7 +86,7 @@ export default function Home() {
                   <CardContent className="flex gap-3">
                     <span
                       className={cn(
-                        "flex size-11 shrink-0 items-center justify-center rounded-xl text-lg font-bold text-white",
+                        "flex size-11 shrink-0 items-center justify-center rounded-xl text-lg font-bold text-black",
                         dimColors[dim].bg,
                       )}
                     >

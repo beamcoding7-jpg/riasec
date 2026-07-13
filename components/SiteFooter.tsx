@@ -21,16 +21,28 @@ export function SiteFooter({ width = "xl" }: { width?: "xl" | "5xl" }) {
           </div>
 
           <nav className="flex flex-col gap-2" aria-label="ลิงก์ส่วนท้าย">
-            <Link href="/test" className="hover:text-foreground transition-colors">
+            <Link
+              href="/test"
+              className="hover:text-foreground inline-flex min-h-11 items-center transition-colors"
+            >
               {strings.footer.startTest}
             </Link>
-            <Link href="/about" className="hover:text-foreground transition-colors">
+            <Link
+              href="/about"
+              className="hover:text-foreground inline-flex min-h-11 items-center transition-colors"
+            >
               {strings.footer.about}
             </Link>
-            <Link href="/universities" className="hover:text-foreground transition-colors">
+            <Link
+              href="/universities"
+              className="hover:text-foreground inline-flex min-h-11 items-center transition-colors"
+            >
               {strings.footer.universities}
             </Link>
-            <Link href="/privacy" className="hover:text-foreground transition-colors">
+            <Link
+              href="/privacy"
+              className="hover:text-foreground inline-flex min-h-11 items-center transition-colors"
+            >
               {strings.footer.privacy}
             </Link>
           </nav>

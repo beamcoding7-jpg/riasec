@@ -76,7 +76,7 @@ export default async function MajorDetailPage({ params }: Props) {
     <DetailShell>
       <div className="space-y-8">
         <div className="space-y-3">
-          <Button asChild variant="ghost" size="sm" className="-ml-2 h-8">
+          <Button asChild variant="ghost" size="sm" className="-ml-2 h-11">
             <Link href="/history">← {strings.majors.backToResults}</Link>
           </Button>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{major.name}</h1>
@@ -91,7 +91,7 @@ export default async function MajorDetailPage({ params }: Props) {
               href={uni.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary inline-flex items-center gap-1 text-sm hover:underline"
+              className="text-link inline-flex min-h-11 items-center gap-1 text-sm hover:underline"
             >
               {strings.universities.visitSite}
               <ExternalLink className="size-3.5" />
@@ -126,7 +126,10 @@ export default async function MajorDetailPage({ params }: Props) {
             <div className="grid gap-3 sm:grid-cols-2">
               {relatedCareers.map((c) => (
                 <Link key={c.slug} href={`/careers/${c.slug}`}>
-                  <Card size="sm" className="hover:ring-primary/40 h-full transition-[box-shadow]">
+                  <Card
+                    size="sm"
+                    className="hover:ring-primary/40 h-full min-h-11 transition-[box-shadow]"
+                  >
                     <CardContent>
                       <p className="leading-tight font-medium">{c.name}</p>
                     </CardContent>

@@ -40,7 +40,7 @@ function HistoryRow({
               <span
                 key={`${d}-${i}`}
                 className={cn(
-                  "flex size-8 items-center justify-center rounded-lg text-sm font-bold text-white",
+                  "flex size-8 items-center justify-center rounded-lg text-sm font-bold text-black",
                   dimColors[d].bg,
                 )}
               >
@@ -52,7 +52,7 @@ function HistoryRow({
             <p className="text-sm font-medium">{strings.results.gradeBadge[grade]}</p>
             <p className="text-muted-foreground text-xs">{date}</p>
           </div>
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm" className="h-11">
             <Link href={`/results/${row.id}`}>{strings.history.open}</Link>
           </Button>
           <DeleteSessionButton sessionId={row.id} />
@@ -91,7 +91,7 @@ export default async function HistoryPage() {
           {isAnonymous && rows.length > 0 && (
             <div className="bg-accent/50 flex flex-col gap-2 rounded-lg p-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm">{strings.history.anonBannerText}</p>
-              <Button asChild size="sm" className="shrink-0">
+              <Button asChild size="sm" className="h-11 shrink-0">
                 <Link href="/account">{strings.history.anonBannerCta}</Link>
               </Button>
             </div>

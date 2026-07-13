@@ -37,7 +37,7 @@ export function RecommendationCard({ rec }: { rec: Recommendation }) {
         {letter && color && (
           <span
             className={cn(
-              "flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white",
+              "flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-black",
               color.bg,
             )}
           >
@@ -69,7 +69,7 @@ export function RecommendationCard({ rec }: { rec: Recommendation }) {
         {rec.href && (
           <Link
             href={rec.href}
-            className="text-primary inline-flex items-center gap-1 text-sm font-medium hover:underline"
+            className="text-link inline-flex min-h-11 items-center gap-1 text-sm font-medium hover:underline"
           >
             {strings.results.detailLink}
             <ArrowRight className="size-4" />

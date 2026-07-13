@@ -133,7 +133,7 @@ function FilterChip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "h-9 rounded-full border px-3.5 text-sm transition-colors",
+        "h-11 rounded-full border px-4 text-sm transition-colors",
         active
           ? "bg-primary text-primary-foreground border-primary"
           : "bg-card hover:bg-muted border-border",
@@ -167,7 +167,7 @@ function UniversityCard({ u }: { u: Uni }) {
             href={u.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary inline-flex items-center gap-1 text-xs hover:underline"
+            className="text-link inline-flex min-h-11 items-center gap-1 text-xs hover:underline"
           >
             {s.visitSite}
             <ExternalLink className="size-3" />

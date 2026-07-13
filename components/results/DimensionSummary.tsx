@@ -28,7 +28,7 @@ export function DimensionSummary({ topDims }: Props) {
             <li key={dim} className="flex gap-3">
               <span
                 className={cn(
-                  "flex size-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white",
+                  "flex size-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-black",
                   dimColors[dim].bg,
                 )}
               >

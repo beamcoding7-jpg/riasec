@@ -35,6 +35,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  /* สีลิงก์ข้อความ — แยกจาก --primary เพื่อให้ผ่าน contrast บนพื้นการ์ด (โดยเฉพาะ dark) */
+  --color-link: var(--link);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -66,6 +68,8 @@
   /* Brand หลัก = Indigo/Violet */
   --primary: oklch(0.511 0.228 277);
   --primary-foreground: oklch(0.985 0 0);
+  /* ลิงก์ข้อความ (light = เท่า primary; ผ่านบนพื้นขาว ~6.3:1) */
+  --link: oklch(0.511 0.228 277);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -110,6 +114,8 @@
   /* Indigo สว่างขึ้นเล็กน้อยสำหรับพื้นมืด แต่ยังคง contrast กับ text ขาว */
   --primary: oklch(0.55 0.22 277);
   --primary-foreground: oklch(0.985 0 0);
+  /* ลิงก์ข้อความใน dark — สว่างกว่า primary เพื่อ contrast ≥4.5 บนการ์ด (primary คงไว้ให้ปุ่ม) */
+  --link: oklch(0.68 0.18 277);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);

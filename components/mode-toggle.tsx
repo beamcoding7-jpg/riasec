@@ -14,6 +14,7 @@ export function ModeToggle() {
     <Button
       variant="outline"
       size="icon"
+      className="size-11"
       aria-label="สลับธีมสว่าง/มืด"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >

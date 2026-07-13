@@ -18,12 +18,19 @@ export function DeleteSessionButton({ sessionId }: { sessionId: string }) {
         <Button
           variant="destructive"
           size="sm"
+          className="h-11"
           disabled={pending}
           onClick={() => startTransition(async () => void (await deleteSession(sessionId)))}
         >
           {pending ? <Loader2 className="size-4 animate-spin" /> : strings.history.delete}
         </Button>
-        <Button variant="ghost" size="sm" disabled={pending} onClick={() => setConfirming(false)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-11"
+          disabled={pending}
+          onClick={() => setConfirming(false)}
+        >
           {strings.common.cancel}
         </Button>
       </div>
@@ -34,6 +41,7 @@ export function DeleteSessionButton({ sessionId }: { sessionId: string }) {
     <Button
       variant="ghost"
       size="icon-sm"
+      className="size-11"
       aria-label={strings.history.delete}
       onClick={() => setConfirming(true)}
     >
