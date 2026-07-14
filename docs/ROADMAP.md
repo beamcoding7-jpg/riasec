@@ -185,15 +185,18 @@
 - [x] 8.4 **SEO**: `metadataBase` + OG/twitter default + per-page OG (detail) + `sitemap.xml` (143 URL) + `robots.txt` + OG image (`next/og`); results = `noindex` — *`generateStaticParams` เลื่อน: `SiteHeader` อ่าน auth cookie → ทุกหน้าเป็น dynamic; SSR ครอบ SEO ครบแล้ว*
 - [x] 8.5 **Security**: Turnstile (behind env flag) เสียบ test-submit + AuthForm; `pg_cron` ลบ anonymous > 30 วัน (FK cascade); `get_advisors` เคลียร์ SECURITY DEFINER (revoke anon/authenticated)
 - [x] 8.6 **Performance/a11y audit**: RSC-first + `next/font` + build เขียว · **Lighthouse (prod, mobile): หน้าแรก a11y/best-practices/SEO = 100; หน้าผล a11y/BP = 100 (SEO 63 = `noindex` ที่ตั้งใจ)**
-- [ ] 8.7 **Deploy production** — *gated: ต้องเชื่อม Vercel + env + ขออนุญาตก่อน promote*
+- [x] 8.7 **Deploy production** — *auto-deploy ผ่าน GitHub↔Vercel integration ทุก push main (live: `https://riasec-zeta.vercel.app`)* · **แก้บั๊ก canonical (`32dc4bf`)**: `lib/site.ts` ใช้ `VERCEL_PROJECT_PRODUCTION_URL` แทน `VERCEL_URL` (เดิม sitemap/OG/robots 143 URL ชี้ per-deploy URL ที่ถูก SSO ปิดกั้น) · verify E2E บน prod แล้ว
+- [ ] 8.8 **Activate Turnstile** — *gated: ต้องสร้างคีย์ Cloudflare (ฟรี) + ใส่ secret ใน Supabase Auth; flag ปิดอยู่ (flow ปกติ)*
 
-**📦 Deliverables**: เว็บ production-ready (โค้ด/DB พร้อม; เหลือ activate Turnstile keys + deploy)
+**📦 Deliverables**: เว็บ production-ready + live บน Vercel (`riasec-zeta.vercel.app`); เหลือ activate Turnstile keys (optional) + custom domain (optional)
 
 **✅ Verification / DoD**
 - [x] typecheck/lint/format/test (48) + `pnpm build` เขียว (sitemap/robots/og = static)
 - [x] SSR verify (curl): landing ไม่มี "Phase 1", about/privacy render, 404=status 404, robots/sitemap/OG ถูกต้อง
 - [x] migration cron apply + `cron.job` active + advisor ไม่มีปัญหาใหม่ + regenerate types
-- [ ] (gated) deploy production + ตั้ง Supabase Site URL + ทดสอบ end-to-end บน prod
+- [x] **E2E บน prod จริง (Chrome MCP @ `riasec-zeta.vercel.app`, มือถือ 390 + dark)**: landing/test/results/account/career-detail render · flow ทำเทส→Server Action→anon auth→insert→results ทำงานครบ (recommendation จาก DB) · ไม่มี console error · a11y fixes (chip ตัวอักษรดำ/radar) live
+- [x] **canonical fixed live**: sitemap 143 URL + robots + og:url/og:image/twitter:image ชี้ `riasec-zeta.vercel.app` (ยืนยันหลัง redeploy)
+- [ ] (optional) ตั้ง Supabase Site URL — *ไม่จำเป็นสำหรับ auth ปัจจุบัน: OTP กรอกรหัส ไม่มี `emailRedirectTo`*
 
 ---
 
@@ -208,7 +211,7 @@
 | 5 | Results & Recommendation | ✅ เสร็จ | radar + บุคลิก + คำแนะนำสาย/อาชีพ/สาขา + เหตุผลจาก DB (e2e m3+m4_6 ผ่าน) |
 | 6 | Auth & History | ✅ เสร็จ | Email OTP upgrade (uid คงอยู่) + /history + ลบผล/ลบบัญชี (cascade) — e2e + DB ยืนยัน |
 | 7 | ขยายคลังข้อมูล | ✅ เสร็จ | 54 มหาลัย + directory · อาชีพ 72 · สาขา 66 · detail อาชีพ/สาขา · ทุกมิติไม่ว่าง — e2e ผ่าน |
-| 8 | Polish & Hardening | 🔄 โค้ด+a11y audit เสร็จ · เหลือ deploy (gated) | landing/SEO/a11y/security + Chrome a11y audit (Lighthouse 100) เสร็จ · รอ deploy prod + activate Turnstile |
+| 8 | Polish & Hardening | ✅ เสร็จ (live) · optional เหลือ Turnstile/custom domain | landing/SEO/a11y/security + Chrome a11y audit (Lighthouse 100) + deploy prod (auto ผ่าน GitHub, `riasec-zeta.vercel.app`) + แก้ canonical + E2E บน prod ผ่าน · เหลือ activate Turnstile (optional) |
 
 > อัปเดตช่อง "สถานะ" เป็น `🔄 กำลังทำ` / `✅ เสร็จ` เมื่อความคืบหน้าเปลี่ยน
 
