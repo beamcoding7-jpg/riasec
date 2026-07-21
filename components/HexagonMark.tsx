@@ -28,6 +28,8 @@ type Props = {
   highlight?: RiasecDimension[] | null;
   // assemble-in ตอนโหลด (มุมป็อปเข้าทีละมุม)
   animated?: boolean;
+  // มุมเต้นวนลูปไล่ทีละมุม — ใช้เป็น loader (คนละโหมดกับ animated)
+  pulse?: boolean;
   // ถ้าให้ title = โหมด a11y (role=img + <title>); ถ้าไม่ให้ = ลายประดับ (aria-hidden)
   title?: string;
 };
@@ -37,6 +39,7 @@ export function HexagonMark({
   showLetters = false,
   highlight = null,
   animated = false,
+  pulse = false,
   title,
 }: Props) {
   const dotR = showLetters ? 10 : 7;
@@ -86,8 +89,19 @@ export function HexagonMark({
         return (
           <g
             key={v.dim}
-            className={cn("hex-vertex", v.popped && "hex-vertex--pop", v.dimmed && "opacity-30")}
-            style={v.popped ? { animationDelay: `${v.order * 90}ms` } : undefined}
+            className={cn(
+              "hex-vertex",
+              v.popped && "hex-vertex--pop",
+              pulse && "hex-vertex--pulse",
+              v.dimmed && "opacity-30",
+            )}
+            style={
+              v.popped
+                ? { animationDelay: `${v.order * 90}ms` }
+                : pulse
+                  ? { animationDelay: `${v.i * 160}ms` }
+                  : undefined
+            }
           >
             <circle cx={v.x} cy={v.y} r={dotR} className={dimColors[v.dim].fill} />
             {showLetters && (

@@ -227,6 +227,7 @@ export const strings = {
     relatedCareers: "อาชีพที่เกี่ยวข้อง",
     relatedCareersDesc: "อาชีพที่เชื่อมโยงกับความสนใจของสาขานี้",
     atUniversity: "เปิดสอนที่",
+    topDimLabel: "มิติเด่นของสาขานี้",
     notFound: "ไม่พบสาขานี้",
     notFoundDesc: "อาจถูกลบไปแล้ว หรือลิงก์ไม่ถูกต้อง",
     ctaTest: "ทำแบบทดสอบหาสาขาที่ใช่",

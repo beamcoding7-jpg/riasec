@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { dimColors } from "@/components/results/dim-colors";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
@@ -50,7 +51,8 @@ export default async function CareerDetailPage({ params }: Props) {
     return (
       <DetailShell>
         <div className="space-y-6 py-10 text-center">
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <HexagonMark className="mx-auto w-20 opacity-60" />
             <h1 className="text-2xl font-bold">{strings.careers.notFound}</h1>
             <p className="text-muted-foreground">{strings.careers.notFoundDesc}</p>
           </div>
@@ -79,30 +81,38 @@ export default async function CareerDetailPage({ params }: Props) {
           {career.short_desc && <p className="text-muted-foreground">{career.short_desc}</p>}
         </div>
 
-        {/* Holland code ของอาชีพ */}
+        {/* Holland code ของอาชีพ — หกเหลี่ยมบอกตำแหน่งบนวง RIASEC + ป้ายมิติ */}
         {codeDims.length > 0 && (
           <div className="space-y-3">
             <h2 className="text-sm font-medium">{strings.careers.hollandLabel}</h2>
-            <div className="flex flex-wrap gap-2">
-              {codeDims.map((dim, i) => {
-                const d = strings.riasec.dimensions[dim];
-                return (
-                  <span
-                    key={`${dim}-${i}`}
-                    className="bg-card ring-foreground/10 inline-flex items-center gap-2 rounded-lg py-1.5 pr-3 pl-1.5 text-sm ring-1"
-                  >
+            <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <HexagonMark
+                showLetters
+                highlight={codeDims}
+                title={`${career.name} · ${codeDims.join("")}`}
+                className="w-28 shrink-0"
+              />
+              <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+                {codeDims.map((dim, i) => {
+                  const d = strings.riasec.dimensions[dim];
+                  return (
                     <span
-                      className={cn(
-                        "flex size-7 items-center justify-center rounded-md text-xs font-bold text-black",
-                        dimColors[dim].bg,
-                      )}
+                      key={`${dim}-${i}`}
+                      className="bg-card ring-border/70 shadow-soft inline-flex items-center gap-2 rounded-lg py-1.5 pr-3 pl-1.5 text-sm ring-1"
                     >
-                      {dim}
+                      <span
+                        className={cn(
+                          "flex size-7 items-center justify-center rounded-md text-xs font-bold text-black",
+                          dimColors[dim].bg,
+                        )}
+                      >
+                        {dim}
+                      </span>
+                      {d.name}
                     </span>
-                    {d.name}
-                  </span>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
@@ -126,11 +136,8 @@ export default async function CareerDetailPage({ params }: Props) {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {relatedMajors.map((m) => (
-                <Link key={m.slug} href={`/majors/${m.slug}`}>
-                  <Card
-                    size="sm"
-                    className="hover:ring-primary/40 h-full min-h-11 transition-[box-shadow]"
-                  >
+                <Link key={m.slug} href={`/majors/${m.slug}`} className="block">
+                  <Card interactive size="sm" className="h-full min-h-11">
                     <CardContent>
                       <p className="leading-tight font-medium">{m.name}</p>
                       {m.university && (

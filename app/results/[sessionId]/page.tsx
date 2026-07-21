@@ -46,7 +46,8 @@ export default async function ResultsPage({ params }: Props) {
     return (
       <ResultsShell center>
         <div className="space-y-6 text-center">
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <HexagonMark className="mx-auto w-20 opacity-60" />
             <h1 className="text-2xl font-bold">{strings.results.notFound}</h1>
             <p className="text-muted-foreground">{strings.results.notFoundDesc}</p>
           </div>

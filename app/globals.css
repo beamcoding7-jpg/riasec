@@ -232,6 +232,22 @@
   animation: hex-dim 0.4s ease-out both;
 }
 
+/* มุมเต้นวนลูป (ไล่ทีละมุม) — ใช้เป็น loader ประจำแบรนด์ */
+@keyframes hex-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.hex-vertex--pulse {
+  animation: hex-pulse 1.4s ease-in-out infinite;
+}
+
 /* Radar: รูปคะแนน "วาดเข้า" จากจุดกึ่งกลาง (scale-in) */
 @keyframes radar-draw {
   from {

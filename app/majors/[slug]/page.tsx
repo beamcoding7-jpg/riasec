@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
+import { HexagonMark } from "@/components/HexagonMark";
+import { dimColors } from "@/components/results/dim-colors";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { strings } from "@/lib/strings";
+import { cn } from "@/lib/utils";
 import type { RiasecDimension } from "@/types";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -46,7 +49,8 @@ export default async function MajorDetailPage({ params }: Props) {
     return (
       <DetailShell>
         <div className="space-y-6 py-10 text-center">
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <HexagonMark className="mx-auto w-20 opacity-60" />
             <h1 className="text-2xl font-bold">{strings.majors.notFound}</h1>
             <p className="text-muted-foreground">{strings.majors.notFoundDesc}</p>
           </div>
@@ -71,6 +75,8 @@ export default async function MajorDetailPage({ params }: Props) {
     .maybeSingle();
 
   const relatedCareers = topDim ? await getRelatedCareers(supabase, topDim.dimension) : [];
+  // มิติเด่น (จาก map) — คอลัมน์ dimension ถูกจำกัดเป็น R/I/A/S/E/C จึง cast ได้
+  const topDimension = (topDim?.dimension ?? null) as RiasecDimension | null;
 
   return (
     <DetailShell>
@@ -99,6 +105,32 @@ export default async function MajorDetailPage({ params }: Props) {
           )}
         </div>
 
+        {/* มิติเด่น — หกเหลี่ยมบอกว่าสาขานี้เอนไปทางด้านไหนบนวง RIASEC */}
+        {topDimension && (
+          <div className="space-y-3">
+            <h2 className="text-sm font-medium">{strings.majors.topDimLabel}</h2>
+            <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <HexagonMark
+                showLetters
+                highlight={[topDimension]}
+                title={`${major.name} · ${topDimension}`}
+                className="w-28 shrink-0"
+              />
+              <span className="bg-card ring-border/70 shadow-soft inline-flex items-center gap-2 rounded-lg py-1.5 pr-3 pl-1.5 text-sm ring-1">
+                <span
+                  className={cn(
+                    "flex size-7 items-center justify-center rounded-md text-xs font-bold text-black",
+                    dimColors[topDimension].bg,
+                  )}
+                >
+                  {topDimension}
+                </span>
+                {strings.riasec.dimensions[topDimension].name}
+              </span>
+            </div>
+          </div>
+        )}
+
         {major.what_you_learn && (
           <Card>
             <CardContent className="space-y-2">
@@ -125,11 +157,8 @@ export default async function MajorDetailPage({ params }: Props) {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {relatedCareers.map((c) => (
-                <Link key={c.slug} href={`/careers/${c.slug}`}>
-                  <Card
-                    size="sm"
-                    className="hover:ring-primary/40 h-full min-h-11 transition-[box-shadow]"
-                  >
+                <Link key={c.slug} href={`/careers/${c.slug}`} className="block">
+                  <Card interactive size="sm" className="h-full min-h-11">
                     <CardContent>
                       <p className="leading-tight font-medium">{c.name}</p>
                     </CardContent>

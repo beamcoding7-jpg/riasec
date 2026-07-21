@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { strings } from "@/lib/strings";
@@ -15,7 +16,8 @@ export default function NotFound() {
         className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-4 py-16 text-center"
       >
         <div className="space-y-6">
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <HexagonMark className="mx-auto w-20 opacity-60" />
             <p className="text-primary text-5xl font-bold">404</p>
             <h1 className="text-2xl font-bold tracking-tight">{strings.notFound.title}</h1>
             <p className="text-muted-foreground">{strings.notFound.desc}</p>
