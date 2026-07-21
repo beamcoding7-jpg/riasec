@@ -95,8 +95,19 @@ export function TestFlow({ questions }: { questions: TestQuestion[] }) {
   return (
     <div className="space-y-6">
       <TestProgress current={index + 1} total={total} />
-      <QuestionCard text={current.text} />
-      <LikertScale name={current.id} value={answers[current.id] ?? null} onSelect={handleSelect} />
+
+      {/* key = id ของคำถาม → re-mount ทุกครั้งที่เปลี่ยนข้อ ให้คำถาม "เลื่อนเข้า" ทีละข้อ */}
+      <div
+        key={current.id}
+        className="animate-in fade-in slide-in-from-bottom-1 space-y-6 duration-300"
+      >
+        <QuestionCard text={current.text} />
+        <LikertScale
+          name={current.id}
+          value={answers[current.id] ?? null}
+          onSelect={handleSelect}
+        />
+      </div>
 
       {/* Turnstile โผล่เฉพาะข้อสุดท้าย (ตอนใกล้ submit) และเฉพาะเมื่อเปิด flag */}
       {isLast && <Turnstile onToken={setCaptchaToken} />}

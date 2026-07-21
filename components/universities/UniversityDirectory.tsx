@@ -146,7 +146,7 @@ function FilterChip({
 
 function UniversityCard({ u }: { u: Uni }) {
   return (
-    <Card size="sm">
+    <Card size="sm" className={cn(u.is_featured && "bg-spark/5 ring-spark/30")}>
       <CardContent className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 space-y-0.5">
@@ -156,7 +156,7 @@ function UniversityCard({ u }: { u: Uni }) {
             </p>
           </div>
           {u.is_featured && (
-            <span className="bg-accent text-accent-foreground inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
+            <span className="bg-spark text-spark-foreground inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
               <Star className="size-3" />
               {s.featured}
             </span>

@@ -18,7 +18,7 @@ export default function PrivacyPage() {
       <SiteHeader />
 
       <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-xl flex-1 px-4 py-8">
-        <div className="space-y-8">
+        <div className="animate-in fade-in slide-in-from-bottom-2 space-y-8 duration-500">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">{privacy.title}</h1>
             <p className="text-muted-foreground text-sm">{privacy.updated}</p>

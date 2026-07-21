@@ -4,8 +4,10 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { Turnstile } from "@/components/Turnstile";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { emailSchema, otpSchema } from "@/lib/auth/schema";
@@ -139,107 +141,120 @@ export function AuthForm({ isAnonymous }: { isAnonymous: boolean }) {
   const lead = mode === "upgrade" ? s.upgradeLead : s.signInLead;
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-        <p className="text-muted-foreground text-sm">{lead}</p>
+    <div className="animate-in fade-in slide-in-from-bottom-2 space-y-6 duration-500">
+      <div className="space-y-3 text-center">
+        <HexagonMark className="mx-auto w-16" />
+        <div className="space-y-1.5">
+          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+          <p className="text-muted-foreground text-sm">{lead}</p>
+        </div>
       </div>
 
-      {step === "email" ? (
-        <form onSubmit={handleSendCode} className="space-y-4" noValidate>
-          <div className="space-y-1.5">
-            <Label htmlFor="email">{s.emailLabel}</Label>
-            <Input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              autoFocus
-              placeholder={s.emailPlaceholder}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-invalid={!!error}
-              disabled={pending}
-            />
-          </div>
+      <Card>
+        <CardContent>
+          {step === "email" ? (
+            <form onSubmit={handleSendCode} className="space-y-4" noValidate>
+              <div className="space-y-1.5">
+                <Label htmlFor="email">{s.emailLabel}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  autoFocus
+                  placeholder={s.emailPlaceholder}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  aria-invalid={!!error}
+                  disabled={pending}
+                />
+              </div>
 
-          {mode === "signin" && isAnonymous && (
-            <p className="text-muted-foreground text-xs">{s.signInNote}</p>
-          )}
+              {mode === "signin" && isAnonymous && (
+                <p className="text-muted-foreground text-xs">{s.signInNote}</p>
+              )}
 
-          {/* CAPTCHA เฉพาะ signin (endpoint ที่ Supabase คุม); โผล่เมื่อเปิด flag */}
-          {mode === "signin" && <Turnstile onToken={setCaptchaToken} />}
+              {/* CAPTCHA เฉพาะ signin (endpoint ที่ Supabase คุม); โผล่เมื่อเปิด flag */}
+              {mode === "signin" && <Turnstile onToken={setCaptchaToken} />}
 
-          {error && <p className="text-destructive text-sm">{error}</p>}
+              {error && <p className="text-destructive text-sm">{error}</p>}
 
-          <Button type="submit" className="h-11 w-full" disabled={pending}>
-            {pending && <Loader2 className="size-4 animate-spin" />}
-            {pending ? s.sending : s.sendCode}
-          </Button>
-
-          {isAnonymous && (
-            <div className="text-center">
-              <Button type="button" variant="link" size="sm" className="h-11" onClick={switchMode}>
-                {mode === "upgrade" ? s.switchToSignIn : s.switchToUpgrade}
+              <Button type="submit" className="h-11 w-full" disabled={pending}>
+                {pending && <Loader2 className="size-4 animate-spin" />}
+                {pending ? s.sending : s.sendCode}
               </Button>
-            </div>
+
+              {isAnonymous && (
+                <div className="text-center">
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="h-11"
+                    onClick={switchMode}
+                  >
+                    {mode === "upgrade" ? s.switchToSignIn : s.switchToUpgrade}
+                  </Button>
+                </div>
+              )}
+            </form>
+          ) : (
+            <form onSubmit={handleVerify} className="space-y-4" noValidate>
+              <p className="text-muted-foreground text-center text-sm">
+                {s.codeSentLead} <span className="text-foreground font-medium">{sentEmail}</span>
+              </p>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="code">{s.codeLabel}</Label>
+                <Input
+                  id="code"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  autoFocus
+                  maxLength={10}
+                  placeholder={s.codePlaceholder}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                  className="text-center font-mono text-lg tracking-[0.3em] placeholder:tracking-normal"
+                  aria-invalid={!!error}
+                  disabled={pending}
+                />
+              </div>
+
+              {error && <p className="text-destructive text-sm">{error}</p>}
+
+              <Button type="submit" className="h-11 w-full" disabled={pending}>
+                {pending && <Loader2 className="size-4 animate-spin" />}
+                {pending ? s.verifying : s.verify}
+              </Button>
+
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="h-11"
+                  onClick={() => sendCode(sentEmail)}
+                  disabled={pending}
+                >
+                  {s.resend}
+                </Button>
+                <span className="text-muted-foreground text-xs">·</span>
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="h-11"
+                  onClick={changeEmail}
+                  disabled={pending}
+                >
+                  {s.changeEmail}
+                </Button>
+              </div>
+            </form>
           )}
-        </form>
-      ) : (
-        <form onSubmit={handleVerify} className="space-y-4" noValidate>
-          <p className="text-muted-foreground text-center text-sm">
-            {s.codeSentLead} <span className="text-foreground font-medium">{sentEmail}</span>
-          </p>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="code">{s.codeLabel}</Label>
-            <Input
-              id="code"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              autoFocus
-              maxLength={10}
-              placeholder={s.codePlaceholder}
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              className="text-center font-mono text-lg tracking-[0.3em] placeholder:tracking-normal"
-              aria-invalid={!!error}
-              disabled={pending}
-            />
-          </div>
-
-          {error && <p className="text-destructive text-sm">{error}</p>}
-
-          <Button type="submit" className="h-11 w-full" disabled={pending}>
-            {pending && <Loader2 className="size-4 animate-spin" />}
-            {pending ? s.verifying : s.verify}
-          </Button>
-
-          <div className="flex items-center justify-center gap-2">
-            <Button
-              type="button"
-              variant="link"
-              size="sm"
-              className="h-11"
-              onClick={() => sendCode(sentEmail)}
-              disabled={pending}
-            >
-              {s.resend}
-            </Button>
-            <span className="text-muted-foreground text-xs">·</span>
-            <Button
-              type="button"
-              variant="link"
-              size="sm"
-              className="h-11"
-              onClick={changeEmail}
-              disabled={pending}
-            >
-              {s.changeEmail}
-            </Button>
-          </div>
-        </form>
-      )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

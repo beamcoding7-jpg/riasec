@@ -23,13 +23,15 @@ export default async function UniversitiesPage() {
     <div className="flex flex-1 flex-col">
       <SiteHeader width="5xl" />
       <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-        <div className="mb-6 space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            {strings.universities.title}
-          </h1>
-          <p className="text-muted-foreground text-sm">{strings.universities.lead}</p>
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="mb-6 space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              {strings.universities.title}
+            </h1>
+            <p className="text-muted-foreground text-sm">{strings.universities.lead}</p>
+          </div>
+          <UniversityDirectory universities={data ?? []} />
         </div>
-        <UniversityDirectory universities={data ?? []} />
       </main>
     </div>
   );

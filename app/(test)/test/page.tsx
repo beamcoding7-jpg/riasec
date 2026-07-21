@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { ModeToggle } from "@/components/mode-toggle";
 import { TestFlow, type TestQuestion } from "@/components/test/TestFlow";
 import { createClient } from "@/lib/supabase/server";
@@ -25,7 +26,8 @@ export default async function TestPage() {
   return (
     <div className="flex flex-1 flex-col">
       <header className="mx-auto flex w-full max-w-xl items-center justify-between px-4 py-4">
-        <Link href="/" className="text-lg font-bold tracking-tight">
+        <Link href="/" className="flex h-11 items-center gap-2 text-lg font-bold tracking-tight">
+          <HexagonMark className="size-6 shrink-0" />
           {strings.common.appName}
         </Link>
         <ModeToggle />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { DeleteAccountButton } from "@/components/auth/DeleteAccountButton";
@@ -29,13 +30,18 @@ export default async function AccountPage() {
         className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8"
       >
         {isPermanent ? (
-          <div className="space-y-6">
-            <div className="space-y-1 text-center">
-              <h1 className="text-2xl font-bold tracking-tight">{strings.account.accountTitle}</h1>
-              <p className="text-muted-foreground text-sm">
-                {strings.account.signedInAs}{" "}
-                <span className="text-foreground font-medium">{user.email}</span>
-              </p>
+          <div className="animate-in fade-in slide-in-from-bottom-2 space-y-6 duration-500">
+            <div className="space-y-3 text-center">
+              <HexagonMark className="mx-auto w-16" />
+              <div className="space-y-1">
+                <h1 className="text-2xl font-bold tracking-tight">
+                  {strings.account.accountTitle}
+                </h1>
+                <p className="text-muted-foreground text-sm">
+                  {strings.account.signedInAs}{" "}
+                  <span className="text-foreground font-medium">{user.email}</span>
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col gap-3">

@@ -39,6 +39,12 @@ export function LikertScale({ name, value, onSelect }: Props) {
           >
             <RadioGroupItem id={id} value={String(optionValue)} />
             <span>{label}</span>
+            {/* จุดความเข้ม: จาง→เข้ม ตามระดับ "ไม่ชอบ→ชอบ" ให้อ่านสเกลได้ทันตา (ลายประดับ) */}
+            <span
+              aria-hidden
+              className="ml-auto size-2.5 shrink-0 rounded-full"
+              style={{ backgroundColor: "var(--primary)", opacity: 0.2 + i * 0.2 }}
+            />
           </Label>
         );
       })}

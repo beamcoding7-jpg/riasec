@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { dimColors } from "@/components/results/dim-colors";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -23,10 +24,18 @@ export default function AboutPage() {
       <SiteHeader />
 
       <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-xl flex-1 px-4 py-8">
-        <div className="space-y-10">
-          <div className="space-y-3">
+        <div className="animate-in fade-in slide-in-from-bottom-2 space-y-10 duration-500">
+          <div className="space-y-4 text-center">
+            <HexagonMark
+              showLetters
+              animated
+              title={strings.home.hexAlt}
+              className="mx-auto w-32 sm:w-40"
+            />
             <h1 className="text-3xl font-bold tracking-tight">{about.title}</h1>
-            <p className="text-muted-foreground leading-relaxed">{about.lead}</p>
+            <p className="text-muted-foreground mx-auto max-w-prose leading-relaxed text-balance">
+              {about.lead}
+            </p>
           </div>
 
           {/* 6 มิติ */}
@@ -60,8 +69,14 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* หกเหลี่ยม */}
-          <Section title={about.hexagonTitle} body={about.hexagonBody} />
+          {/* หกเหลี่ยม — โชว์ signature จริงประกอบคำอธิบาย */}
+          <section className="space-y-3">
+            <h2 className="text-lg font-semibold">{about.hexagonTitle}</h2>
+            <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
+              <HexagonMark showLetters className="w-36 shrink-0" />
+              <p className="text-muted-foreground leading-relaxed">{about.hexagonBody}</p>
+            </div>
+          </section>
           {/* วิธีทำงาน */}
           <Section title={about.howTitle} body={about.howBody} />
           {/* Holland code */}
