@@ -14,7 +14,12 @@ import { signOut } from "./actions";
 
 export const metadata: Metadata = { title: strings.common.account };
 
-export default async function AccountPage() {
+export default async function AccountPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error: linkErr } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -69,7 +74,7 @@ export default async function AccountPage() {
             </Card>
           </div>
         ) : (
-          <AuthForm isAnonymous={!!user?.is_anonymous} />
+          <AuthForm isAnonymous={!!user?.is_anonymous} linkError={linkErr === "link"} />
         )}
       </main>
     </div>
