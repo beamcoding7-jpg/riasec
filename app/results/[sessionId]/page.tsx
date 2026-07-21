@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { DimensionSummary } from "@/components/results/DimensionSummary";
 import { dimColors } from "@/components/results/dim-colors";
 import { RecommendationSection } from "@/components/results/RecommendationSection";
@@ -100,12 +101,19 @@ export default async function ResultsPage({ params }: Props) {
   return (
     <ResultsShell>
       <div className="space-y-10">
-        {/* หัวเรื่อง + Holland code */}
-        <div className="animate-in fade-in slide-in-from-bottom-2 space-y-4 text-center duration-500">
+        {/* หัวเรื่อง + Holland code — โมเมนต์เผยผล: หกเหลี่ยมเน้น 3 ด้านเด่น */}
+        <div className="animate-in fade-in slide-in-from-bottom-2 space-y-5 text-center duration-500">
           <span className="bg-secondary text-secondary-foreground inline-block rounded-full px-3 py-1 text-xs font-medium">
             {strings.results.gradeBadge[grade]}
           </span>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{strings.results.title}</h1>
+          <HexagonMark
+            showLetters
+            animated
+            highlight={topDims}
+            title={`${strings.results.hollandLabel}: ${topDims.join("")}`}
+            className="mx-auto w-44 sm:w-52"
+          />
           <div className="space-y-2">
             <p className="text-muted-foreground text-sm">{strings.results.hollandLabel}</p>
             <div className="flex items-center justify-center gap-2">
@@ -113,7 +121,7 @@ export default async function ResultsPage({ params }: Props) {
                 <span
                   key={`${dim}-${i}`}
                   className={cn(
-                    "flex size-12 items-center justify-center rounded-xl text-2xl font-bold text-black",
+                    "shadow-soft flex size-12 items-center justify-center rounded-xl text-2xl font-bold text-black",
                     dimColors[dim].bg,
                   )}
                 >

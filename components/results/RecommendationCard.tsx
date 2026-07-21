@@ -29,7 +29,7 @@ export function RecommendationCard({ rec }: { rec: Recommendation }) {
   return (
     <details
       className={cn(
-        "bg-card group overflow-hidden rounded-xl border border-l-4",
+        "bg-card group shadow-soft hover:shadow-lift overflow-hidden rounded-xl border border-l-4 transition-shadow",
         color ? color.border : "border-l-border",
       )}
     >

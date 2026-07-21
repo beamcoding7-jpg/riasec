@@ -261,6 +261,7 @@ export const strings = {
     dimsTitle: "ความสนใจ 6 ด้านของ RIASEC",
     dimsLead: "ทุกคนมีครบทั้ง 6 ด้าน แต่จะเด่นต่างกัน — แบบทดสอบช่วยบอกว่าด้านไหนคือตัวคุณ",
     footerCta: "พร้อมรู้จักตัวเองมากขึ้นหรือยัง?",
+    hexAlt: "หกเหลี่ยม RIASEC 6 ด้าน: R I A S E C",
   },
 
   // หน้า /about — อธิบาย RIASEC (Phase 8)

@@ -31,10 +31,10 @@ export function LikertScale({ name, value, onSelect }: Props) {
             key={optionValue}
             htmlFor={id}
             className={cn(
-              "border-border flex cursor-pointer items-center gap-3 rounded-xl border p-4 text-base font-normal transition-colors",
+              "border-border flex cursor-pointer items-center gap-3 rounded-xl border p-4 text-base font-normal transition-[background-color,border-color,transform] active:scale-[0.99]",
               "hover:bg-muted",
               // ไฮไลต์ทั้งแถวเมื่อ radio ข้างในถูกเลือก (radix ใส่ data-checked ที่ item)
-              "has-[[data-checked]]:border-primary has-[[data-checked]]:bg-accent has-[[data-checked]]:text-accent-foreground has-[[data-checked]]:font-medium",
+              "has-[[data-checked]]:border-primary has-[[data-checked]]:bg-accent has-[[data-checked]]:text-accent-foreground has-[[data-checked]]:ring-primary/25 has-[[data-checked]]:font-medium has-[[data-checked]]:ring-1",
             )}
           >
             <RadioGroupItem id={id} value={String(optionValue)} />

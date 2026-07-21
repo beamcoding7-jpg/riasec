@@ -5,14 +5,21 @@ import { cn } from "@/lib/utils";
 function Card({
   className,
   size = "default",
+  interactive = false,
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<"div"> & {
+  size?: "default" | "sm";
+  // interactive = การ์ดที่กดได้ (ลิงก์/ปุ่ม) → มี hover lift; การ์ดนิ่งไม่ใส่ เพื่อไม่หลอกว่ากดได้
+  interactive?: boolean;
+}) {
   return (
     <div
       data-slot="card"
       data-size={size}
       className={cn(
-        "group/card bg-card text-card-foreground ring-foreground/10 flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-sm ring-1 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "group/card bg-card text-card-foreground ring-border/70 shadow-soft flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-sm ring-1 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        interactive &&
+          "hover:ring-primary/30 hover:shadow-lift transition-[box-shadow,transform,border-color] duration-200 hover:-translate-y-0.5",
         className,
       )}
       {...props}

@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
-import { Noto_Sans_Thai, Geist_Mono } from "next/font/google";
+import { Noto_Sans_Thai, Anuphan, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteDescription, siteName, siteUrl } from "@/lib/site";
 import { strings } from "@/lib/strings";
 
-// ฟอนต์ไทยหลัก (self-host โดย next/font) — ผูกกับ --font-sans ที่ theme ใช้
+// ฟอนต์ไทยหลัก (self-host โดย next/font) — ผูกกับ --font-sans ที่ theme ใช้ (เนื้อความ)
 const notoSansThai = Noto_Sans_Thai({
   variable: "--font-sans",
   subsets: ["thai", "latin"],
+  display: "swap",
+});
+
+// ฟอนต์ display ไทย (หัวเรื่อง) — เรขาคณิต โมเดิร์น เป็นมิตร; ผูก --font-display ที่ --font-heading ใช้
+// โหลดเฉพาะน้ำหนักหนา (หัวเรื่องเท่านั้น) เพื่อคุมขนาดไฟล์ฟอนต์
+const anuphan = Anuphan({
+  variable: "--font-display",
+  subsets: ["thai", "latin"],
+  weight: ["600", "700"],
   display: "swap",
 });
 
@@ -53,7 +62,7 @@ export default function RootLayout({
     <html
       lang="th"
       suppressHydrationWarning
-      className={`${notoSansThai.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${notoSansThai.variable} ${anuphan.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <ThemeProvider

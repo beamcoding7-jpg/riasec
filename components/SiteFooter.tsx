@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { strings } from "@/lib/strings";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +17,10 @@ export function SiteFooter({ width = "xl" }: { width?: "xl" | "5xl" }) {
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm space-y-1.5">
-            <p className="text-foreground font-bold">{strings.common.appName}</p>
+            <p className="text-foreground flex items-center gap-2 font-bold">
+              <HexagonMark className="size-5 shrink-0" />
+              {strings.common.appName}
+            </p>
             <p className="text-xs leading-relaxed">{strings.footer.tagline}</p>
           </div>
 

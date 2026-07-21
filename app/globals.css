@@ -9,7 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  /* หัวเรื่องใช้ฟอนต์ display (Anuphan) — fallback เป็น body ถ้ายังไม่โหลด */
+  --font-heading: var(--font-display, var(--font-sans));
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -35,6 +36,14 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  /* Spark = accent สดใส (amber) ใช้เน้น "จุดพลัง" เท่านั้น (badge/ไฮไลต์) ไม่แทนปุ่มหลัก */
+  --color-spark: var(--spark);
+  --color-spark-foreground: var(--spark-foreground);
+  /* เงานุ่มโทน indigo (ไม่ใช่เทาดำ) — ให้การ์ดมีมิติแต่ไม่หนัก */
+  --shadow-soft:
+    0 1px 2px -1px oklch(0.4 0.09 277 / 0.1), 0 3px 10px -2px oklch(0.4 0.09 277 / 0.1);
+  --shadow-lift:
+    0 4px 8px -2px oklch(0.4 0.09 277 / 0.12), 0 14px 32px -6px oklch(0.4 0.09 277 / 0.16);
   /* สีลิงก์ข้อความ — แยกจาก --primary เพื่อให้ผ่าน contrast บนพื้นการ์ด (โดยเฉพาะ dark) */
   --color-link: var(--link);
   --color-popover-foreground: var(--popover-foreground);
@@ -58,28 +67,36 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* radius นุ่มขึ้นเล็กน้อย ให้ดูเป็นมิตรกับวัยรุ่น (scale sm/md/lg/xl derive ต่อใน @theme) */
+  --radius: 0.875rem;
+  /* Neutral มี tint indigo บางๆ (hue 277) — "เทาแบบมีแบรนด์" ไม่ใช่คลินิก
+     พื้นหลังออกขาวนวลนิดๆ ส่วนการ์ดขาวสนิท → การ์ด "ลอย" เหนือพื้น */
+  --background: oklch(0.99 0.004 277);
+  --foreground: oklch(0.17 0.02 277);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.17 0.02 277);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.17 0.02 277);
   /* Brand หลัก = Indigo/Violet */
   --primary: oklch(0.511 0.228 277);
   --primary-foreground: oklch(0.985 0 0);
   /* ลิงก์ข้อความ (light = เท่า primary; ผ่านบนพื้นขาว ~6.3:1) */
   --link: oklch(0.511 0.228 277);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --secondary: oklch(0.965 0.008 277);
+  --secondary-foreground: oklch(0.22 0.03 277);
+  --muted: oklch(0.965 0.008 277);
+  --muted-foreground: oklch(0.51 0.03 277);
   /* Accent อ่อน = violet ทินท์ ใช้กับ hover/ไฮไลต์ย่อย */
-  --accent: oklch(0.96 0.02 288);
+  --accent: oklch(0.95 0.03 288);
   --accent-foreground: oklch(0.31 0.13 277);
+  /* Spark = amber สดใส (สปาร์กพลังงาน) + ข้อความเข้มบน amber ให้ contrast ผ่าน */
+  --spark: oklch(0.83 0.16 78);
+  --spark-foreground: oklch(0.32 0.08 78);
+  /* Gradient แบรนด์ indigo→violet สำหรับ hero CTA/หัวเรื่องพิเศษ */
+  --gradient-brand: linear-gradient(135deg, oklch(0.53 0.23 277), oklch(0.56 0.22 312));
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --border: oklch(0.9 0.008 277);
+  --input: oklch(0.9 0.008 277);
   --ring: oklch(0.511 0.228 277);
   --chart-1: oklch(0.511 0.228 277);
   --chart-2: oklch(0.66 0.17 145);
@@ -105,27 +122,32 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
+  /* Indigo-charcoal (มี tint 277) แทนดำสนิท — พื้นมืดแต่ "อุ่นแบรนด์" การ์ดสว่างกว่าพื้นเล็กน้อยให้เห็นเลเยอร์ */
+  --background: oklch(0.17 0.015 277);
+  --foreground: oklch(0.985 0.003 277);
+  --card: oklch(0.215 0.02 277);
+  --card-foreground: oklch(0.985 0.003 277);
+  --popover: oklch(0.215 0.02 277);
+  --popover-foreground: oklch(0.985 0.003 277);
   /* Indigo สว่างขึ้นเล็กน้อยสำหรับพื้นมืด แต่ยังคง contrast กับ text ขาว */
-  --primary: oklch(0.55 0.22 277);
+  --primary: oklch(0.6 0.2 277);
   --primary-foreground: oklch(0.985 0 0);
   /* ลิงก์ข้อความใน dark — สว่างกว่า primary เพื่อ contrast ≥4.5 บนการ์ด (primary คงไว้ให้ปุ่ม) */
-  --link: oklch(0.68 0.18 277);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.3 0.05 285);
+  --link: oklch(0.72 0.16 277);
+  --secondary: oklch(0.27 0.02 277);
+  --secondary-foreground: oklch(0.985 0.003 277);
+  --muted: oklch(0.27 0.02 277);
+  --muted-foreground: oklch(0.72 0.03 277);
+  --accent: oklch(0.32 0.05 285);
   --accent-foreground: oklch(0.92 0.03 288);
+  /* Spark ใน dark — amber สว่างกว่าเล็กน้อย, ข้อความบน spark ยังเข้ม */
+  --spark: oklch(0.82 0.15 78);
+  --spark-foreground: oklch(0.28 0.07 78);
+  --gradient-brand: linear-gradient(135deg, oklch(0.58 0.22 277), oklch(0.62 0.2 312));
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.55 0.22 277);
+  --ring: oklch(0.6 0.2 277);
   --chart-1: oklch(0.62 0.2 277);
   --chart-2: oklch(0.74 0.16 145);
   --chart-3: oklch(0.78 0.16 55);
@@ -158,6 +180,73 @@
   html {
     @apply font-sans;
   }
+  /* หัวเรื่องใช้ฟอนต์ display (Anuphan) อัตโนมัติทั้งเว็บ — เนื้อความยังเป็น body font */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* พื้น gradient แบรนด์ indigo→violet — ใช้กับ hero CTA / บล็อกเน้น (อ้าง --gradient-brand) */
+@utility bg-brand-gradient {
+  background-image: var(--gradient-brand);
+}
+
+/* ── Signature motion: หกเหลี่ยม RIASEC (CSS ล้วน ทำงานใน RSC; reduced-motion ปิดให้เองด้านล่าง) ── */
+
+/* มุมหกเหลี่ยม "ป็อป" เข้าที่ทีละมุม (assemble-in) */
+@keyframes hex-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  70% {
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* หรี่มุมที่ไม่ใช่ top-3 ให้จางลงหลังเผยผล (reveal) */
+@keyframes hex-dim {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.28;
+  }
+}
+
+/* แต่ละมุมหมุน/สเกลจากจุดกึ่งกลางของตัวเอง (ไม่ใช่มุม SVG 0,0) */
+.hex-vertex {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.hex-vertex--pop {
+  animation: hex-pop 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+.hex-vertex--dim {
+  animation: hex-dim 0.4s ease-out both;
+}
+
+/* Radar: รูปคะแนน "วาดเข้า" จากจุดกึ่งกลาง (scale-in) */
+@keyframes radar-draw {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.radar-draw {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: radar-draw 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* เคารพผู้ใช้ที่ตั้งค่า "ลดการเคลื่อนไหว" (a11y) — ปิด animation/transition ทั้งเว็บ */

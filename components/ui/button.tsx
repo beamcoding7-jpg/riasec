@@ -9,7 +9,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        default: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/80",
+        // Brand = gradient indigo→violet สำหรับ CTA พิเศษ (hero) — เด่นสุดในเว็บ, ใช้อย่างจำกัด
+        brand:
+          "bg-brand-gradient text-white shadow-soft brightness-100 hover:brightness-110 hover:shadow-lift",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:

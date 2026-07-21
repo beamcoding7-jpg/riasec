@@ -1,5 +1,6 @@
 import { RIASEC_DIMENSIONS } from "@/lib/riasec";
 import { strings } from "@/lib/strings";
+import { cn } from "@/lib/utils";
 import type { RiasecDimension } from "@/types";
 
 import { dimColors } from "./dim-colors";
@@ -82,18 +83,43 @@ export function RiasecRadar({ scores }: Props) {
         );
       })}
 
-      {/* รูปหลายเหลี่ยมของคะแนนจริง */}
-      <polygon
-        points={dataPolygon}
-        className="fill-primary/20 stroke-primary"
-        strokeWidth={2}
-        strokeLinejoin="round"
-      />
+      {/* รูปคะแนนจริง — วาดเข้าจากจุดกึ่งกลาง (CSS, RSC-safe) */}
+      <g className="radar-draw">
+        {/* รังสีสีประจำด้าน จากศูนย์กลางถึงจุดคะแนน — "เติม 6 สี" ให้กราฟมีชีวิต + ความยาว = คะแนน */}
+        {dims.map(({ dim, dataPt }) => (
+          <line
+            key={`ray-${dim}`}
+            x1={CENTER}
+            y1={CENTER}
+            x2={dataPt.x}
+            y2={dataPt.y}
+            className={dimColors[dim].stroke}
+            strokeWidth={2.5}
+            strokeLinecap="round"
+            opacity={0.85}
+          />
+        ))}
 
-      {/* จุดยอดแต่ละด้าน (สีประจำด้าน) */}
-      {dims.map(({ dim, dataPt }) => (
-        <circle key={dim} cx={dataPt.x} cy={dataPt.y} r={3} className={dimColors[dim].fill} />
-      ))}
+        {/* รูปหลายเหลี่ยมของคะแนน — เส้นเชื่อมจุดยอด + พื้นทินต์บาง */}
+        <polygon
+          points={dataPolygon}
+          className="fill-primary/10 stroke-primary/50"
+          strokeWidth={1.5}
+          strokeLinejoin="round"
+        />
+
+        {/* จุดยอดแต่ละด้าน (สีประจำด้าน) + ขอบสีพื้นให้เด้ง */}
+        {dims.map(({ dim, dataPt }) => (
+          <circle
+            key={dim}
+            cx={dataPt.x}
+            cy={dataPt.y}
+            r={4}
+            className={cn(dimColors[dim].fill, "stroke-card")}
+            strokeWidth={1.5}
+          />
+        ))}
+      </g>
 
       {/* ตัวอักษรกำกับด้าน (สีประจำด้าน) */}
       {dims.map(({ dim, meta, labelPt }) => {

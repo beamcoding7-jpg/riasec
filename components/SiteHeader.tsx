@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HexagonMark } from "@/components/HexagonMark";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
@@ -22,7 +23,8 @@ export async function SiteHeader({ width = "xl" }: { width?: "xl" | "5xl" }) {
         width === "5xl" ? "max-w-5xl" : "max-w-xl",
       )}
     >
-      <Link href="/" className="flex h-11 items-center text-lg font-bold tracking-tight">
+      <Link href="/" className="flex h-11 items-center gap-2 text-lg font-bold tracking-tight">
+        <HexagonMark className="size-6 shrink-0" />
         {strings.common.appName}
       </Link>
       <nav className="flex items-center gap-1">
